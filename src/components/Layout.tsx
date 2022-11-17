@@ -11,6 +11,7 @@ import {
 import { Layout, Menu, Avatar, Badge } from 'antd';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import React, { useState } from 'react';
+import { getSessionStorage } from '@/utils/token';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -41,7 +42,7 @@ const menuItems: ItemType[] = [
 export default function Style({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [currentMenu, setCurrentMenu] = useState<string>(menuName.Account);
-
+  const userId = getSessionStorage('userEmail');
   return (
     <Layout style={{ height: '100vh' }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -70,8 +71,10 @@ export default function Style({ children }: { children: React.ReactNode }) {
               />
             </Badge>
             <Avatar shape="square" icon={<UserOutlined />} />
+            <span>{userId}님 환영합니다.</span>
           </div>
         </Header>
+
         <Content
           className="site-layout-background"
           style={{

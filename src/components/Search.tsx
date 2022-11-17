@@ -8,7 +8,9 @@ import styles from '../styles/Search.module.css';
 export default function Search() {
   const setAccountList = useSetRecoilState(accountState);
   const [searchKeyword, setKeyword] = useState<string>('');
+
   const [isShow, setIsShow] = useState<boolean>(false);
+
 
   const onChangeHandle = (e) => {
     setKeyword(e.target.value);
@@ -20,6 +22,7 @@ export default function Search() {
     setIsShow(true);
     setKeyword('');
   };
+
 
   const onClickHandle = (e) => {
     e.preventDefault();
