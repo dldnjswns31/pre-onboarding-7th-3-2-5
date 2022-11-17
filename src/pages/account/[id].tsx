@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/recoil/userState';
 
-import { getAccountList } from '@/apis/login';
+import { editAccountData, getAccountList } from '@/apis/login';
 import { accountActive, getAccountStatus, getBrokerName } from '@/utils/valueConversion';
 import { dateFormat, comma, accountMasking } from '@/utils/formatting';
 
@@ -12,6 +12,7 @@ import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 interface DataType {
+  id: number;
   user_id: number;
   broker_id: string;
   number: string;
@@ -24,8 +25,10 @@ interface DataType {
 }
 
 export default function AccountId() {
-  const users = useRecoilValue(userState);
-  const [accountDetail, setAccountDetail] = useState([]);
+  const [accountDetail, setAccountDetail] = useState<DataType[]>([]);
+  const users = useRecoilValue(userState)?.filter((user) => user.id === accountDetail[0]?.user_id);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+
   const router = useRouter();
   const id = router.query.id as string;
   const columns: ColumnsType<DataType> = [
@@ -74,7 +77,30 @@ export default function AccountId() {
       title: '계좌 활성화',
       dataIndex: 'is_active',
       key: 'is_active',
-      render: (active) => accountActive(active),
+      render: (active) => {
+        const onchangeHandle = (e) => {
+          const { name, value } = e.target;
+          setAccountDetail([
+            {
+              ...accountDetail[0],
+              [name]: Boolean(parseInt(value)),
+            },
+          ]);
+        };
+        return isEdit ? (
+          <select
+            name="is_active"
+            id="active"
+            value={accountDetail[0]?.is_active ? '1' : '0'}
+            onChange={onchangeHandle}
+          >
+            <option value="1">활성화</option>
+            <option value="0">비활성화</option>
+          </select>
+        ) : (
+          accountActive(active)
+        );
+      },
     },
     {
       title: '계좌 개설일',
@@ -96,12 +122,31 @@ export default function AccountId() {
     getAccountList({ number_like: id }).then((res) => setAccountDetail(res?.data));
   }, [id]);
 
-  const editBtnHandle = () => {};
+  const editBtnHandle = () => {
+    setIsEdit(true);
+  };
+
+  const submitBtnHandle = (e) => {
+    e.preventDefault();
+    const id = accountDetail[0]?.id;
+    editAccountData(id, accountDetail[0]).then((res) => setIsEdit(false));
+  };
 
   return (
     <>
-      <h2>계좌 정보</h2>
-      <Table columns={columns} dataSource={accountDetail} pagination={false} />
+      {isEdit ? (
+        <>
+          <h2>계좌 정보</h2>
+          <Table columns={columns} dataSource={accountDetail} pagination={false} />
+          <input type="button" value="제출하기" onClick={submitBtnHandle} />
+        </>
+      ) : (
+        <>
+          <h2>계좌 정보</h2>
+          <Table columns={columns} dataSource={accountDetail} pagination={false} />
+          <input type="button" value="수정하기" onClick={editBtnHandle} />
+        </>
+      )}
     </>
   );
 }
