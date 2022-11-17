@@ -1,8 +1,6 @@
-import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { accountState, selectedFilter } from '@/recoil/accountState';
+import { accountState, currentPageState, totalAccountState } from '@/recoil/accountState';
 
-import { getAccountFilter, getAccountList } from '@/apis/login';
 import getBrokerName from '@/utils/brokerName';
 import getAccountStatus from '@/utils/accountStatus';
 import accountMasking from '@/utils/accountMasking';
@@ -10,7 +8,7 @@ import accountActive from '@/utils/accountActive';
 import dateFormat from '@/utils/dateFormat';
 import comma from '@/utils/comma';
 
-import { Space, Table } from 'antd';
+import { Space, Table, Pagination } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 interface DataType {
@@ -85,15 +83,8 @@ const columns: ColumnsType<DataType> = [
 
 export default function AccountList() {
   const [accountList, setAccountList] = useRecoilState(accountState);
-  const params = useRecoilValue(selectedFilter);
-
-  useEffect(() => {
-    getAccountList().then((res) => setAccountList(res));
-  }, []);
-
-  useEffect(() => {
-    getAccountFilter(params).then((res) => setAccountList(res));
-  }, [params]);
+  const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
+  const totalAccountItem = useRecoilValue(totalAccountState);
 
   const data = accountList?.map((account) => {
     return {
@@ -109,5 +100,27 @@ export default function AccountList() {
     };
   });
 
-  return <Table columns={columns} dataSource={data} />;
+  return (
+    <>
+      <Table columns={columns} dataSource={data} pagination={false} />
+      <div className="pagination__container">
+        <Pagination
+          defaultCurrent={currentPage}
+          total={totalAccountItem}
+          showSizeChanger={false}
+          onChange={(page) => {
+            setCurrentPage(page);
+          }}
+        />
+      </div>
+      <style jsx>{`
+        .pagination__container {
+          display: inline-flex;
+          justify-content: center;
+          width: 100%;
+          margin-top: 2rem;
+        }
+      `}</style>
+    </>
+  );
 }

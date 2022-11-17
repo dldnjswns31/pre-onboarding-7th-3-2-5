@@ -10,7 +10,10 @@ import {
 } from '@ant-design/icons';
 import { Layout, Menu, Avatar, Badge } from 'antd';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { accountState, currentPageState, selectedFilter, totalAccountState } from '@/recoil/accountState';
+import { getAccountList } from '@/apis/login';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -41,6 +44,38 @@ const menuItems: ItemType[] = [
 export default function Style({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [currentMenu, setCurrentMenu] = useState<string>(menuName.Account);
+  const [_, setTotalAccountItem] = useRecoilState<number>(totalAccountState);
+  const [accountList, setAccountList] = useRecoilState(accountState);
+  const filterParams = useRecoilValue(selectedFilter);
+  const currentPage = useRecoilValue(currentPageState);
+
+  console.log('리렌더');
+
+  useEffect(() => {
+    getAccountList().then((res) => {
+      setTotalAccountItem(res?.data.length);
+    });
+    if (filterParams.length === 0) {
+      getAccountList({ _page: currentPage }).then((res) => {
+        console.log(res);
+        setAccountList(res.data);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    getAccountList({ ...filterParams }).then((res) => {
+      setTotalAccountItem(res?.data.length);
+    });
+  }, [filterParams]);
+
+  useEffect(() => {
+    if (filterParams.length !== 0) {
+      getAccountList({ ...filterParams, _page: currentPage }).then((res) => {
+        setAccountList(res.data);
+      });
+    }
+  }, [filterParams, currentPage]);
 
   return (
     <Layout style={{ height: '100vh' }}>
