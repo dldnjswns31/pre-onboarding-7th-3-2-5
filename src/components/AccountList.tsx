@@ -1,18 +1,17 @@
-import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { accountState, selectedFilter } from '@/recoil/accountState';
 import { userState } from '@/recoil/userState';
-import { getAccountFilter, getAccountList, getUserList } from '@/apis/login';
-import getBrokerName from '@/utils/brokerName';
-import getAccountStatus from '@/utils/accountStatus';
-import accountMasking from '@/utils/accountMasking';
-import accountActive from '@/utils/accountActive';
-import dateFormat from '@/utils/dateFormat';
-import comma from '@/utils/comma';
-import { Space, Table } from 'antd';
+import { accountState, currentPageState, totalAccountState } from '@/recoil/accountState';
+import Link from 'next/link';
+
+import { accountActive, getAccountStatus, getBrokerName } from '@/utils/valueConversion';
+import { dateFormat, comma, accountMasking } from '@/utils/formatting';
+
+import { Space, Table, Pagination } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { deleteAccount } from '@/apis/account';
 
 interface DataType {
+  id: number;
   user_id: string;
   broker_id: string | undefined;
   number: string;
@@ -25,11 +24,17 @@ interface DataType {
 }
 
 export default function AccountList() {
-  const [users, setUserList] = useRecoilState(userState);
+  const userList = useRecoilValue(userState);
   const [accountList, setAccountList] = useRecoilState(accountState);
-  const params = useRecoilValue(selectedFilter);
+  const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
+  const totalAccountItem = useRecoilValue(totalAccountState);
 
   const columns: ColumnsType<DataType> = [
+    {
+      title: '계좌명',
+      dataIndex: 'name',
+      key: 'name',
+    },
     {
       title: '고객명',
       dataIndex: 'user_id',
@@ -44,17 +49,12 @@ export default function AccountList() {
       title: '계좌번호',
       dataIndex: 'number',
       key: 'number',
-      render: (text) => <a>{accountMasking(text)}</a>,
+      render: (account) => <Link href={`/account/${account}`}>{accountMasking(account)}</Link>,
     },
     {
       title: '계좌상태',
       dataIndex: 'status',
       key: 'status',
-    },
-    {
-      title: '계좌명',
-      dataIndex: 'name',
-      key: 'name',
     },
     {
       title: '평가금액',
@@ -96,11 +96,18 @@ export default function AccountList() {
             <button
               style={{ border: 'none', backgroundColor: 'white', color: '#1890ff' }}
               onClick={() => {
-                deleteHandler(record.number);
+                deleteAccount(record.id);
+                deleteHandler(record.id);
+                alert('삭제되었습니다.');
               }}
             >
               삭제
             </button>
+            <style jsx>{`
+              button {
+                cursor: pointer;
+              }
+            `}</style>
           </Space>
         );
       },
@@ -108,27 +115,19 @@ export default function AccountList() {
   ];
 
   const userNameMatch = (userId: number) => {
-    const userData = users?.filter((user) => user.id === userId)[0];
+    const userData = userList?.filter((user) => user.id === userId)[0];
     return userData?.name;
   };
 
-  const deleteHandler = (number: string) => {
-    const newAccountList = accountList?.filter((item) => item.number !== number);
+  const deleteHandler = (id: number) => {
+    const newAccountList = accountList?.filter((item) => item.id !== id);
     setAccountList(newAccountList);
   };
-
-  useEffect(() => {
-    getAccountList().then((res) => setAccountList(res));
-    getUserList().then((res) => setUserList(res));
-  }, []);
-
-  useEffect(() => {
-    getAccountFilter(params).then((res) => setAccountList(res));
-  }, [params]);
 
   const data = accountList?.map((account, idx) => {
     return {
       key: idx,
+      id: account.id,
       user_id: userNameMatch(account.user_id),
       broker_id: getBrokerName(account.broker_id),
       number: account.number,
@@ -141,5 +140,29 @@ export default function AccountList() {
     };
   });
 
-  return <Table columns={columns} dataSource={data} />;
+  return (
+    <>
+      <Table columns={columns} dataSource={data} pagination={false} />
+      <div className="pagination__container">
+        <Pagination
+          defaultCurrent={1}
+          current={currentPage}
+          total={totalAccountItem}
+          showSizeChanger={false}
+          hideOnSinglePage={true}
+          onChange={(page) => {
+            setCurrentPage(page);
+          }}
+        />
+      </div>
+      <style jsx>{`
+        .pagination__container {
+          display: inline-flex;
+          justify-content: center;
+          width: 100%;
+          margin-top: 2rem;
+        }
+      `}</style>
+    </>
+  );
 }

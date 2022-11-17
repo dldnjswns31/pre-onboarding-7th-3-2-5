@@ -1,4 +1,12 @@
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { getSessionStorage, removeSessionStorage } from '@/utils/token';
+import { getAccountList, getUserList } from '@/apis/login';
+import { accountState, currentPageState, selectedFilter, totalAccountState } from '@/recoil/accountState';
+import { searchKeywordState } from '@/recoil/searchState';
+import { userState } from '@/recoil/userState';
+import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import 'antd/dist/antd.css';
 import {
   MenuFoldOutlined,
@@ -9,10 +17,8 @@ import {
   BellOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Avatar, Badge } from 'antd';
-import { ItemType } from 'antd/lib/menu/hooks/useItems';
-import React, { useState } from 'react';
-import { getSessionStorage } from '@/utils/token';
 import AccountCreate from './AccountCreate';
+import router from 'next/router';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -21,23 +27,59 @@ enum menuName {
   Logout = '로그아웃',
 }
 
-const menuItems: ItemType[] = [
-  {
-    key: menuName.Account,
-    icon: <BankOutlined />,
-    label: <Link href="/">{menuName.Account}</Link>,
-  },
-  {
-    key: menuName.Logout,
-    icon: <LogoutOutlined />,
-    label: <Link href="/">{menuName.Logout}</Link>,
-  },
-];
-
-export default function Style({ children }: { children: React.ReactNode }) {
+export default function Style({ children, setToken }) {
+  const setUserList = useSetRecoilState(userState);
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [currentMenu, setCurrentMenu] = useState<string>(menuName.Account);
+  const searchKeyword = useRecoilValue(searchKeywordState);
+  const setTotalAccountItem = useSetRecoilState<number>(totalAccountState);
+  const setAccountList = useSetRecoilState(accountState);
+  const filterParams = useRecoilValue(selectedFilter);
+  const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
+
+  useEffect(() => {
+    getAccountList().then((res) => {
+      setTotalAccountItem(res?.data.length);
+    });
+    getUserList().then((res) => setUserList(res));
+  }, []);
+
+  useEffect(() => {
+    getAccountList({ ...filterParams, name_like: searchKeyword }).then((res) => {
+      setTotalAccountItem(res?.data.length);
+    });
+    setCurrentPage(1);
+  }, [filterParams, searchKeyword]);
+
+  useEffect(() => {
+    getAccountList({ ...filterParams, _page: currentPage, name_like: searchKeyword }).then((res) => {
+      setAccountList(res?.data);
+    });
+  }, [filterParams, currentPage, searchKeyword]);
+
   const userId = getSessionStorage('userEmail');
+  const menuItems: ItemType[] = [
+    {
+      key: menuName.Account,
+      icon: <BankOutlined />,
+      label: <Link href="/">{menuName.Account}</Link>,
+    },
+    {
+      key: menuName.Logout,
+      icon: <LogoutOutlined />,
+      label: (
+        <div
+          onClick={() => {
+            removeSessionStorage();
+            setToken(null);
+            router.push('/login');
+          }}
+        >
+          {menuName.Logout}
+        </div>
+      ),
+    },
+  ];
   return (
     <Layout style={{ height: '100vh' }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
