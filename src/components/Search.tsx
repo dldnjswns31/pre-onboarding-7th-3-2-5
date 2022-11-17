@@ -34,6 +34,7 @@ export default function Search() {
 
   return (
     <form onSubmit={onSubmitHandle} className="search">
+      {isShow && <input type="button" className={styles.totalBtn} value="전체 계좌보기" onClick={onClickHandle} />}
       <input
         type="text"
         className={styles.searchbar}
@@ -42,7 +43,6 @@ export default function Search() {
         placeholder="계좌명을 검색해보세요."
       />
       <input type="submit" className={styles.searchBtn} value="검색" />
-      {isShow && <input type="button" className={styles.totalBtn} value="전체 계좌보기" onClick={onClickHandle} />}
     </form>
   );
 }
