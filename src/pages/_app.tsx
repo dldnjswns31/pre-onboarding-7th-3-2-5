@@ -3,9 +3,8 @@ import { RecoilRoot } from 'recoil';
 import { useEffect, useState } from 'react';
 
 import { getSessionStorage } from '@/utils/token';
-import '../styles/globals.css';
 
-import Login from './login';
+import '../styles/globals.css';
 import Style from '@/components/Layout';
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -16,13 +15,15 @@ export default function App({ Component, pageProps }: AppProps) {
     setToken(token);
   }, []);
 
-  return hasToken ? (
+  return (
     <RecoilRoot>
-      <Style>
-        <Component {...pageProps} />
-      </Style>
+      {hasToken ? (
+        <Style>
+          <Component {...pageProps} />
+        </Style>
+      ) : (
+        <Component {...pageProps} setToken={setToken} />
+      )}
     </RecoilRoot>
-  ) : (
-    <Login />
   );
 }
