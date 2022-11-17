@@ -2,15 +2,11 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { useRecoilState } from 'recoil';
-import { accountState } from '@/recoil/accountState';
 import { userState } from '@/recoil/userState';
 
 import { getAccountList, getUserList, getAccountDetail } from '@/apis/login';
-import getBrokerName from '@/utils/brokerName';
-import getAccountStatus from '@/utils/accountStatus';
-import accountActive from '@/utils/accountActive';
-import dateFormat from '@/utils/dateFormat';
-import comma from '@/utils/comma';
+import { accountActive, getAccountStatus, getBrokerName } from '@/utils/valueConversion';
+import { dateFormat, comma, accountMasking } from '@/utils/formatting';
 
 import { Space, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
@@ -37,11 +33,13 @@ export default function AccountId() {
       title: '고객명',
       dataIndex: 'user_id',
       key: 'user_id',
+      render: (user) => userNameMatch(user),
     },
     {
       title: '브로커명',
       dataIndex: 'broker_id',
       key: 'broker_id',
+      render: (broker) => getBrokerName(broker),
     },
     {
       title: '계좌번호',
@@ -52,6 +50,7 @@ export default function AccountId() {
       title: '계좌상태',
       dataIndex: 'status',
       key: 'status',
+      render: (status) => getAccountStatus(status),
     },
     {
       title: '계좌명',
@@ -62,21 +61,25 @@ export default function AccountId() {
       title: '평가금액',
       dataIndex: 'assets',
       key: 'assets',
+      render: (assets) => comma(assets),
     },
     {
       title: '입금금액',
       dataIndex: 'payments',
       key: 'payments',
+      render: (payments) => comma(payments),
     },
     {
       title: '계좌 활성화',
       dataIndex: 'is_active',
       key: 'is_active',
+      render: (active) => accountActive(active),
     },
     {
       title: '계좌 개설일',
       dataIndex: 'created_at',
       key: 'created_at',
+      render: (date) => dateFormat(date),
     },
   ];
 
@@ -89,27 +92,13 @@ export default function AccountId() {
     if (!id) {
       return;
     }
-    getAccountList({ number_like: id }).then((res) => setAccountDetail(res));
+    getAccountList({ number_like: id }).then((res) => setAccountDetail(res?.data));
   }, [id]);
-
-  const data = accountDetail?.map((account: DataType) => {
-    return {
-      user_id: userNameMatch(account.user_id),
-      broker_id: getBrokerName(account.broker_id),
-      number: account.number,
-      status: getAccountStatus(account.status),
-      name: account.name,
-      assets: comma(account.assets),
-      payments: comma(account.payments),
-      is_active: accountActive(account.is_active),
-      created_at: dateFormat(account.created_at),
-    };
-  });
 
   return (
     <>
       <h2>계좌 정보</h2>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={accountDetail} pagination={false} />
     </>
   );
 }
