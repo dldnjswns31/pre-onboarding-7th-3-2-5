@@ -130,7 +130,7 @@ export default function Style({ children, setToken }) {
         </Content>
         <div>
           <AccountCreate />
-          <Footer style={{ textAlign: 'center', color: '#656565' }}>Capyright © Decembern and Company Inc.</Footer>
+          <Footer style={{ textAlign: 'center', color: '#656565' }}>© December and Company Inc.</Footer>
         </div>
       </Layout>
     </Layout>
