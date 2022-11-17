@@ -1,34 +1,36 @@
 import { getSearchData } from '@/apis/login';
 import { accountState } from '@/recoil/accountState';
+import { searchKeywordState } from '@/recoil/searchState';
 import { useState } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import styles from '../styles/Search.module.css';
 
 export default function Search() {
   const setAccountList = useSetRecoilState(accountState);
-  const [searchKeyword, setKeyword] = useState<string>('');
+  const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
 
+  const [inputValue, setInputValue] = useState<string>('');
   const [isShow, setIsShow] = useState<boolean>(false);
 
-
   const onChangeHandle = (e) => {
-    setKeyword(e.target.value);
+    setInputValue(e.target.value);
   };
 
   const onSubmitHandle = (e) => {
     e.preventDefault();
-    getSearchData(searchKeyword).then((res) => setAccountList(res));
+    // getSearchData(inputValue).then((res) => setAccountList(res));
+    setSearchKeyword(inputValue);
     setIsShow(true);
-    setKeyword('');
+    setInputValue('');
   };
-
 
   const onClickHandle = (e) => {
     e.preventDefault();
-    setKeyword('');
-    getSearchData(searchKeyword).then((res) => setAccountList(res));
+    // getSearchData(inputValue).then((res) => setAccountList(res));
+    setSearchKeyword(inputValue);
     setIsShow(false);
+    setInputValue('');
   };
 
   return (
@@ -36,7 +38,7 @@ export default function Search() {
       <input
         type="text"
         className={styles.searchbar}
-        value={searchKeyword}
+        value={inputValue}
         onChange={onChangeHandle}
         placeholder="계좌명을 검색해보세요."
       />

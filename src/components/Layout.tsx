@@ -11,10 +11,11 @@ import {
 import { Layout, Menu, Avatar, Badge } from 'antd';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import React, { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { accountState, currentPageState, selectedFilter, totalAccountState } from '@/recoil/accountState';
 import { getAccountList } from '@/apis/login';
 import { getSessionStorage } from '@/utils/token';
+import { searchKeywordState } from '@/recoil/searchState';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -39,8 +40,9 @@ const menuItems: ItemType[] = [
 export default function Style({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [currentMenu, setCurrentMenu] = useState<string>(menuName.Account);
-  const [_, setTotalAccountItem] = useRecoilState<number>(totalAccountState);
-  const [accountList, setAccountList] = useRecoilState(accountState);
+  const searchKeyword = useRecoilValue(searchKeywordState);
+  const setTotalAccountItem = useSetRecoilState<number>(totalAccountState);
+  const setAccountList = useSetRecoilState(accountState);
   const filterParams = useRecoilValue(selectedFilter);
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
 
@@ -59,19 +61,19 @@ export default function Style({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    getAccountList({ ...filterParams }).then((res) => {
+    getAccountList({ ...filterParams, name_like: searchKeyword }).then((res) => {
       setTotalAccountItem(res?.data.length);
     });
     setCurrentPage(1);
-  }, [filterParams]);
+  }, [filterParams, searchKeyword]);
 
   useEffect(() => {
     if (filterParams.length !== 0) {
-      getAccountList({ ...filterParams, _page: currentPage }).then((res) => {
-        setAccountList(res.data);
+      getAccountList({ ...filterParams, _page: currentPage, name_like: searchKeyword }).then((res) => {
+        setAccountList(res?.data);
       });
     }
-  }, [filterParams, currentPage]);
+  }, [filterParams, currentPage, searchKeyword]);
 
   const userId = getSessionStorage('userEmail');
   return (
