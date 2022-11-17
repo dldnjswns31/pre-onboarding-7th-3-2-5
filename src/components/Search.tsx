@@ -1,13 +1,11 @@
-import { getSearchData } from '@/apis/login';
-import { accountState } from '@/recoil/accountState';
 import { searchKeywordState } from '@/recoil/searchState';
 import { useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 
 import styles from '../styles/Search.module.css';
 
 export default function Search() {
-  const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
+  const setSearchKeyword = useSetRecoilState(searchKeywordState);
 
   const [inputValue, setInputValue] = useState<string>('');
   const [isShow, setIsShow] = useState<boolean>(false);
@@ -18,26 +16,24 @@ export default function Search() {
 
   const onSubmitHandle = (e) => {
     e.preventDefault();
-    if (!searchKeyword) {
+    if (!inputValue) {
       alert('검색어를 입력해주세요!');
       return;
     }
     setSearchKeyword(inputValue);
     setIsShow(true);
-    setInputValue('');
   };
 
   const onClickHandle = (e) => {
     e.preventDefault();
-    // getSearchData(inputValue).then((res) => setAccountList(res));
-    setSearchKeyword(inputValue);
     setIsShow(false);
     setInputValue('');
+    setSearchKeyword('');
   };
 
   return (
     <form onSubmit={onSubmitHandle} className="search">
-      {isShow && <input type="button" className={styles.totalBtn} value="전체 계좌보기" onClick={onClickHandle} />}
+      {isShow && <input type="button" className={styles.totalBtn} value="검색 해제" onClick={onClickHandle} />}
       <input
         type="text"
         className={styles.searchbar}
