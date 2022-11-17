@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { accountState, selectedFilter } from '@/recoil/accountState';
+import { userState } from '@/recoil/userState';
 
-import { getAccountFilter, getAccountList } from '@/apis/login';
+import { getAccountFilter, getAccountList, getUserList } from '@/apis/login';
 import getBrokerName from '@/utils/brokerName';
 import getAccountStatus from '@/utils/accountStatus';
 import accountMasking from '@/utils/accountMasking';
@@ -14,7 +15,7 @@ import { Space, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 interface DataType {
-  user_id: number;
+  user_id: string;
   broker_id: string | undefined;
   number: string;
   status: string | undefined;
@@ -84,11 +85,18 @@ const columns: ColumnsType<DataType> = [
 ];
 
 export default function AccountList() {
+  const [users, setUserList] = useRecoilState(userState);
   const [accountList, setAccountList] = useRecoilState(accountState);
   const params = useRecoilValue(selectedFilter);
 
+  const userNameMatch = (userId: number) => {
+    const userData = users.filter((user) => user.id === userId)[0];
+    return userData?.name;
+  };
+
   useEffect(() => {
     getAccountList().then((res) => setAccountList(res));
+    getUserList().then((res) => setUserList(res));
   }, []);
 
   useEffect(() => {
@@ -97,7 +105,7 @@ export default function AccountList() {
 
   const data = accountList?.map((account) => {
     return {
-      user_id: account.user_id,
+      user_id: userNameMatch(account.user_id),
       broker_id: getBrokerName(account.broker_id),
       number: accountMasking(account.number),
       status: getAccountStatus(account.status),
