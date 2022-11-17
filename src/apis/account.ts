@@ -15,3 +15,17 @@ export const deleteAccount = async (id: number) => {
     console.log('error : ', err);
   }
 };
+
+export const createAccount = async (...values: any[]) => {
+  const token = getSessionStorage('token');
+  console.log('token', token);
+  try {
+    await instance.post(`/accounts`, values[0], {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (err) {
+    console.log('error', err);
+  }
+};
