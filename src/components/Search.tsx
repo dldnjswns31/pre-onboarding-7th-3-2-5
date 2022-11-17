@@ -11,18 +11,20 @@ export default function Search() {
 
   const [isShow, setIsShow] = useState<boolean>(false);
 
-
   const onChangeHandle = (e) => {
     setKeyword(e.target.value);
   };
 
   const onSubmitHandle = (e) => {
     e.preventDefault();
+    if (!searchKeyword) {
+      alert('검색어를 입력해주세요!');
+      return;
+    }
     getSearchData(searchKeyword).then((res) => setAccountList(res));
     setIsShow(true);
     setKeyword('');
   };
-
 
   const onClickHandle = (e) => {
     e.preventDefault();
