@@ -6,7 +6,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://yoni-jserver.fly.dev/:path*',
+        destination: 'https://yoni-jsonsv.fly.dev/:path*',
       },
     ];
   },
