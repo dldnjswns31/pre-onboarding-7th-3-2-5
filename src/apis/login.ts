@@ -32,6 +32,21 @@ export const getAccountList = async () => {
   }
 };
 
+export const getAccountFilter = async (params: object) => {
+  const token = getSessionStorage('token');
+  try {
+    const { data } = await instance.get('/accounts', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: params,
+    });
+    return data;
+  } catch (err) {
+    console.log('error : ', err);
+  }
+};
+
 // TODO 추후 분리 예정
 export const getUserList = async () => {
   const token = getSessionStorage('token');

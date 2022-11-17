@@ -1,4 +1,4 @@
-import { atom, selector } from 'recoil';
+import { atom } from 'recoil';
 
 interface accountList {
   id: number;
@@ -24,23 +24,5 @@ export const accountState = atom<accountListType>({
 
 export const selectedBroker = atom({
   key: 'selectedBroker',
-  default: 'defualt',
-});
-
-export const brokerFilter = selector({
-  key: 'brokerFilter',
-  get: ({ get }) => {
-    const accountList = get(accountState);
-    const selected = get(selectedBroker);
-
-    console.log('selected : ', selected);
-
-    switch (selected) {
-      case selected:
-        const copyAccountList = accountList && [...accountList];
-        return copyAccountList.filter((account) => account.broker_id === selected);
-      default:
-        return accountList;
-    }
-  },
+  default: {},
 });
