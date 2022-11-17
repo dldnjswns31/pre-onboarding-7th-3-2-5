@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import Link from 'next/link';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { accountState, selectedFilter } from '@/recoil/accountState';
 import { userState } from '@/recoil/userState';
@@ -41,7 +42,7 @@ const columns: ColumnsType<DataType> = [
     title: '계좌번호',
     dataIndex: 'number',
     key: 'number',
-    render: (text) => <a>{text}</a>,
+    render: (account) => <Link href={`/account/${account}`}>{accountMasking(account)}</Link>,
   },
   {
     title: '계좌상태',
@@ -107,7 +108,7 @@ export default function AccountList() {
     return {
       user_id: userNameMatch(account.user_id),
       broker_id: getBrokerName(account.broker_id),
-      number: accountMasking(account.number),
+      number: account.number,
       status: getAccountStatus(account.status),
       name: account.name,
       assets: comma(account.assets),
