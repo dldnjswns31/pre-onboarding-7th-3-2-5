@@ -1,8 +1,7 @@
 import { useRecoilState } from 'recoil';
 import { selectedFilter } from '@/recoil/accountState';
 
-import { brokers } from '@/utils/brokerName';
-import { statusList } from '@/utils/accountStatus';
+import { brokers, statusList } from '@/utils/valueConversion';
 
 import styles from '../styles/Filter.module.css';
 

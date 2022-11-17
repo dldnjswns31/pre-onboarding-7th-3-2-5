@@ -1,3 +1,17 @@
+export function accountActive(isActive: boolean) {
+  return isActive ? '활성화' : '비활성화';
+}
+
+interface ArrayType {
+  [key: string]: number;
+}
+
+export const statusList: ArrayType = { 관리자확인필요: 9999, 입금대기: 1, 운용중: 2, 투자중지: 3, 해지: 4 };
+
+export function getAccountStatus(status: number) {
+  return Object.keys(statusList).find((key) => statusList[key] === status);
+}
+
 interface brokerType {
   [key: string]: string;
 }
@@ -30,6 +44,6 @@ export const brokers: brokerType = {
   '271': '토스증권',
 };
 
-export default function getBrokerName(brokerId: string) {
+export function getBrokerName(brokerId: string) {
   return Object.values(brokers).find((value) => value === brokers[brokerId]);
 }
