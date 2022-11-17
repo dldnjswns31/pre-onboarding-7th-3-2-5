@@ -1,13 +1,9 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { userState } from '@/recoil/userState';
 import { accountState, currentPageState, totalAccountState } from '@/recoil/accountState';
 
-import { userState } from '@/recoil/userState';
-import getBrokerName from '@/utils/brokerName';
-import getAccountStatus from '@/utils/accountStatus';
-import accountMasking from '@/utils/accountMasking';
-import accountActive from '@/utils/accountActive';
-import dateFormat from '@/utils/dateFormat';
-import comma from '@/utils/comma';
+import { accountActive, getAccountStatus, getBrokerName } from '@/utils/valueConversion';
+import { dateFormat, comma, accountMasking } from '@/utils/formatting';
 
 import { Space, Table, Pagination } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
@@ -32,6 +28,11 @@ export default function AccountList() {
 
   const columns: ColumnsType<DataType> = [
     {
+      title: '계좌명',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
       title: '고객명',
       dataIndex: 'user_id',
       key: 'user_id',
@@ -51,11 +52,6 @@ export default function AccountList() {
       title: '계좌상태',
       dataIndex: 'status',
       key: 'status',
-    },
-    {
-      title: '계좌명',
-      dataIndex: 'name',
-      key: 'name',
     },
     {
       title: '평가금액',
