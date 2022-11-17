@@ -1,6 +1,6 @@
-import { useRecoilState } from 'recoil';
-import { accountState } from '../recoil/accountState';
 import { useEffect } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { accountState, brokerFilter, selectedBroker } from '@/recoil/accountState';
 
 import { getAccountList } from '@/apis/login';
 import getBrokerName from '@/utils/brokerName';
@@ -85,7 +85,14 @@ const columns: ColumnsType<DataType> = [
 
 export default function AccountList() {
   const [accountList, setAccount] = useRecoilState(accountState);
-  const data = accountList?.map((account) => {
+  const filteredList = useRecoilValue(brokerFilter);
+
+  console.log('filteredList', filteredList);
+  useEffect(() => {
+    getAccountList().then((res) => setAccount(res));
+  }, []);
+
+  const data = (filteredList.length > 0 ? filteredList : accountList).map((account) => {
     return {
       user_id: account.user_id,
       broker_id: getBrokerName(account.broker_id),
@@ -98,10 +105,6 @@ export default function AccountList() {
       created_at: dateFormat(account.created_at),
     };
   });
-
-  useEffect(() => {
-    getAccountList().then((res) => setAccount(res));
-  }, []);
 
   return <Table columns={columns} dataSource={data} />;
 }
