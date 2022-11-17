@@ -1,9 +1,7 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { accountState, currentPageState, totalAccountState, selectedFilter } from '@/recoil/accountState';
+import { accountState, currentPageState, totalAccountState } from '@/recoil/accountState';
 
 import { userState } from '@/recoil/userState';
-
-import { getAccountFilter, getAccountList, getUserList } from '@/apis/login';
 import getBrokerName from '@/utils/brokerName';
 import getAccountStatus from '@/utils/accountStatus';
 import accountMasking from '@/utils/accountMasking';
@@ -26,80 +24,106 @@ interface DataType {
   created_at: string;
 }
 
-const columns: ColumnsType<DataType> = [
-  {
-    title: '고객명',
-    dataIndex: 'user_id',
-    key: 'user_id',
-  },
-  {
-    title: '브로커명',
-    dataIndex: 'broker_id',
-    key: 'broker_id',
-  },
-  {
-    title: '계좌번호',
-    dataIndex: 'number',
-    key: 'number',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: '계좌상태',
-    dataIndex: 'status',
-    key: 'status',
-  },
-  {
-    title: '계좌명',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: '평가금액',
-    dataIndex: 'assets',
-    key: 'assets',
-  },
-  {
-    title: '입금금액',
-    dataIndex: 'payments',
-    key: 'payments',
-  },
-  {
-    title: '계좌 활성화',
-    dataIndex: 'is_active',
-    key: 'is_active',
-  },
-  {
-    title: '계좌 개설일',
-    dataIndex: 'created_at',
-    key: 'created_at',
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_) => (
-      <Space size="middle">
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
-
 export default function AccountList() {
-  const users = useRecoilValue(userState);
-  const accountList = useRecoilValue(accountState);
+  const userList = useRecoilValue(userState);
+  const [accountList, setAccountList] = useRecoilState(accountState);
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
   const totalAccountItem = useRecoilValue(totalAccountState);
 
+  const columns: ColumnsType<DataType> = [
+    {
+      title: '고객명',
+      dataIndex: 'user_id',
+      key: 'user_id',
+    },
+    {
+      title: '브로커명',
+      dataIndex: 'broker_id',
+      key: 'broker_id',
+    },
+    {
+      title: '계좌번호',
+      dataIndex: 'number',
+      key: 'number',
+      render: (text) => <a>{accountMasking(text)}</a>,
+    },
+    {
+      title: '계좌상태',
+      dataIndex: 'status',
+      key: 'status',
+    },
+    {
+      title: '계좌명',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: '평가금액',
+      dataIndex: 'assets',
+      key: 'assets',
+      render: (price, recode) => {
+        let color = '#111111';
+        if (price > recode.payments) {
+          color = '#cf1322';
+        }
+        if (price < recode.payments) {
+          color = '#096dd9';
+        }
+
+        return <div style={{ color: color }}>{price}</div>;
+      },
+    },
+    {
+      title: '입금금액',
+      dataIndex: 'payments',
+      key: 'payments',
+    },
+    {
+      title: '계좌 활성화',
+      dataIndex: 'is_active',
+      key: 'is_active',
+    },
+    {
+      title: '계좌 개설일',
+      dataIndex: 'created_at',
+      key: 'created_at',
+    },
+    {
+      title: '계좌관리',
+      key: 'action',
+      render: (_, record) => {
+        return (
+          <Space size="middle">
+            <button
+              style={{ border: 'none', backgroundColor: 'white', color: '#1890ff' }}
+              onClick={() => {
+                deleteHandler(record.number);
+              }}
+            >
+              삭제
+            </button>
+          </Space>
+        );
+      },
+    },
+  ];
+
   const userNameMatch = (userId: number) => {
-    const userData = users.filter((user) => user.id === userId)[0];
+    const userData = userList?.filter((user) => user.id === userId)[0];
     return userData?.name;
   };
 
-  const data = accountList?.map((account) => {
+  const deleteHandler = (number: string) => {
+    const newAccountList = accountList?.filter((item) => item.number !== number);
+    setAccountList(newAccountList);
+  };
+
+  const data = accountList?.map((account, idx) => {
     return {
+      key: idx,
       user_id: userNameMatch(account.user_id),
       broker_id: getBrokerName(account.broker_id),
-      number: accountMasking(account.number),
+      number: account.number,
       status: getAccountStatus(account.status),
       name: account.name,
       assets: comma(account.assets),
@@ -114,7 +138,8 @@ export default function AccountList() {
       <Table columns={columns} dataSource={data} pagination={false} />
       <div className="pagination__container">
         <Pagination
-          defaultCurrent={currentPage}
+          defaultCurrent={1}
+          current={currentPage}
           total={totalAccountItem}
           showSizeChanger={false}
           hideOnSinglePage={true}

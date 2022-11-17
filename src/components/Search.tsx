@@ -7,7 +7,6 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import styles from '../styles/Search.module.css';
 
 export default function Search() {
-  const setAccountList = useSetRecoilState(accountState);
   const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
 
   const [inputValue, setInputValue] = useState<string>('');
@@ -19,7 +18,10 @@ export default function Search() {
 
   const onSubmitHandle = (e) => {
     e.preventDefault();
-    // getSearchData(inputValue).then((res) => setAccountList(res));
+    if (!searchKeyword) {
+      alert('검색어를 입력해주세요!');
+      return;
+    }
     setSearchKeyword(inputValue);
     setIsShow(true);
     setInputValue('');
