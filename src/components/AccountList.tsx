@@ -27,64 +27,68 @@ interface DataType {
   created_at: string;
 }
 
-const columns: ColumnsType<DataType> = [
-  {
-    title: '고객명',
-    dataIndex: 'user_id',
-    key: 'user_id',
-  },
-  {
-    title: '브로커명',
-    dataIndex: 'broker_id',
-    key: 'broker_id',
-  },
-  {
-    title: '계좌번호',
-    dataIndex: 'number',
-    key: 'number',
-    render: (account) => <Link href={`/account/${account}`}>{accountMasking(account)}</Link>,
-  },
-  {
-    title: '계좌상태',
-    dataIndex: 'status',
-    key: 'status',
-  },
-  {
-    title: '계좌명',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: '평가금액',
-    dataIndex: 'assets',
-    key: 'assets',
-  },
-  {
-    title: '입금금액',
-    dataIndex: 'payments',
-    key: 'payments',
-  },
-  {
-    title: '계좌 활성화',
-    dataIndex: 'is_active',
-    key: 'is_active',
-  },
-  {
-    title: '계좌 개설일',
-    dataIndex: 'created_at',
-    key: 'created_at',
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_) => (
-      <Space size="middle">
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
+export default function AccountList() {
+  const [users, setUserList] = useRecoilState(userState);
+  const [accountList, setAccountList] = useRecoilState(accountState);
+  const params = useRecoilValue(selectedFilter);
 
+  const columns: ColumnsType<DataType> = [
+    {
+      title: '고객명',
+      dataIndex: 'user_id',
+      key: 'user_id',
+    },
+    {
+      title: '브로커명',
+      dataIndex: 'broker_id',
+      key: 'broker_id',
+    },
+    {
+      title: '계좌번호',
+      dataIndex: 'number',
+      key: 'number',
+      render: (account) => <Link href={`/account/${account}`}>{accountMasking(account)}</Link>,
+    },
+    {
+      title: '계좌상태',
+      dataIndex: 'status',
+      key: 'status',
+    },
+    {
+      title: '계좌명',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: '평가금액',
+      dataIndex: 'assets',
+      key: 'assets',
+    },
+    {
+      title: '입금금액',
+      dataIndex: 'payments',
+      key: 'payments',
+    },
+    {
+      title: '계좌 활성화',
+      dataIndex: 'is_active',
+      key: 'is_active',
+    },
+    {
+      title: '계좌 개설일',
+      dataIndex: 'created_at',
+      key: 'created_at',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_) => (
+        <Space size="middle">
+          <a>Delete</a>
+        </Space>
+      ),
+    },
+  ];
 
   const userNameMatch = (userId: number) => {
     const userData = users.filter((user) => user.id === userId)[0];

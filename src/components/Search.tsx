@@ -2,7 +2,6 @@ import { getSearchData } from '@/apis/login';
 import { accountState } from '@/recoil/accountState';
 import { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-
 import styles from '../styles/Search.module.css';
 
 export default function Search() {
