@@ -10,8 +10,12 @@ import {
 } from '@ant-design/icons';
 import { Layout, Menu, Avatar, Badge } from 'antd';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { accountState, currentPageState, selectedFilter, totalAccountState } from '@/recoil/accountState';
+import { getAccountList } from '@/apis/login';
 import { getSessionStorage } from '@/utils/token';
+import { searchKeywordState } from '@/recoil/searchState';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -36,6 +40,41 @@ const menuItems: ItemType[] = [
 export default function Style({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [currentMenu, setCurrentMenu] = useState<string>(menuName.Account);
+  const searchKeyword = useRecoilValue(searchKeywordState);
+  const setTotalAccountItem = useSetRecoilState<number>(totalAccountState);
+  const setAccountList = useSetRecoilState(accountState);
+  const filterParams = useRecoilValue(selectedFilter);
+  const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
+
+  console.log('리렌더');
+
+  useEffect(() => {
+    getAccountList().then((res) => {
+      setTotalAccountItem(res?.data.length);
+    });
+    if (filterParams.length === 0) {
+      getAccountList({ _page: currentPage }).then((res) => {
+        console.log(res);
+        setAccountList(res.data);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    getAccountList({ ...filterParams, name_like: searchKeyword }).then((res) => {
+      setTotalAccountItem(res?.data.length);
+    });
+    setCurrentPage(1);
+  }, [filterParams, searchKeyword]);
+
+  useEffect(() => {
+    if (filterParams.length !== 0) {
+      getAccountList({ ...filterParams, _page: currentPage, name_like: searchKeyword }).then((res) => {
+        setAccountList(res?.data);
+      });
+    }
+  }, [filterParams, currentPage, searchKeyword]);
+
   const userId = getSessionStorage('userEmail');
   return (
     <Layout style={{ height: '100vh' }}>
