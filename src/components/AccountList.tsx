@@ -84,18 +84,18 @@ const columns: ColumnsType<DataType> = [
 ];
 
 export default function AccountList() {
-  const [accountList, setAccount] = useRecoilState(accountState);
+  const [accountList, setAccountList] = useRecoilState(accountState);
   const params = useRecoilValue(selectedFilter);
 
   useEffect(() => {
-    getAccountList().then((res) => setAccount(res));
+    getAccountList().then((res) => setAccountList(res));
   }, []);
 
   useEffect(() => {
-    getAccountFilter(params).then((res) => setAccount(res));
+    getAccountFilter(params).then((res) => setAccountList(res));
   }, [params]);
 
-  const data = accountList.map((account) => {
+  const data = accountList?.map((account) => {
     return {
       user_id: account.user_id,
       broker_id: getBrokerName(account.broker_id),

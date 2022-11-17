@@ -26,3 +26,8 @@ export const selectedFilter = atom({
   key: 'selectedFilter',
   default: {},
 });
+
+export const searchState = atom({
+  key: 'searchState',
+  default: '',
+});

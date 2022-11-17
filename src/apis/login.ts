@@ -47,6 +47,23 @@ export const getAccountFilter = async (params: object) => {
   }
 };
 
+export const getSearchData = async (keyword: string) => {
+  const token = getSessionStorage('token');
+  try {
+    const { data } = await instance.get('/accounts', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        q: keyword,
+      },
+    });
+    return data;
+  } catch (err) {
+    console.log('error : ', err);
+  }
+};
+
 // TODO 추후 분리 예정
 export const getUserList = async () => {
   const token = getSessionStorage('token');
@@ -57,7 +74,7 @@ export const getUserList = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log('data', data);
+    return data;
   } catch (err) {
     console.log('error : ', err);
   }
