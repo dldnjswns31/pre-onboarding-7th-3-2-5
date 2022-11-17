@@ -1,6 +1,7 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userState } from '@/recoil/userState';
 import { accountState, currentPageState, totalAccountState } from '@/recoil/accountState';
+import Link from 'next/link';
 
 import { accountActive, getAccountStatus, getBrokerName } from '@/utils/valueConversion';
 import { dateFormat, comma, accountMasking } from '@/utils/formatting';
@@ -46,7 +47,7 @@ export default function AccountList() {
       title: '계좌번호',
       dataIndex: 'number',
       key: 'number',
-      render: (text) => <a>{accountMasking(text)}</a>,
+      render: (account) => <Link href={`/account/${account}`}>{accountMasking(account)}</Link>,
     },
     {
       title: '계좌상태',
@@ -85,22 +86,13 @@ export default function AccountList() {
       key: 'created_at',
     },
     {
-      title: '계좌관리',
+      title: 'Action',
       key: 'action',
-      render: (_, record) => {
-        return (
-          <Space size="middle">
-            <button
-              style={{ border: 'none', backgroundColor: 'white', color: '#1890ff' }}
-              onClick={() => {
-                deleteHandler(record.number);
-              }}
-            >
-              삭제
-            </button>
-          </Space>
-        );
-      },
+      render: (_) => (
+        <Space size="middle">
+          <a>Delete</a>
+        </Space>
+      ),
     },
   ];
 

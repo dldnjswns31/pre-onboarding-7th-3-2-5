@@ -78,3 +78,19 @@ export const getUserList = async () => {
     console.log('error : ', err);
   }
 };
+
+export const getAccountDetail = async (params: object) => {
+  const token = getSessionStorage('token');
+
+  try {
+    const { data } = await instance.get('/accounts', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params,
+    });
+    return data;
+  } catch (err) {
+    console.log('error : ', err);
+  }
+};
