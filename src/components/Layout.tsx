@@ -1,6 +1,5 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { getSessionStorage, removeSessionStorage } from '@/utils/token';
 import { getAccountList, getUserList } from '@/apis/login';
 import { accountState, currentPageState, selectedFilter, totalAccountState } from '@/recoil/accountState';
@@ -18,6 +17,9 @@ import {
 } from '@ant-design/icons';
 import { Layout, Menu, Avatar, Badge } from 'antd';
 import router from 'next/router';
+import Link from 'next/link';
+import Image from 'next/image';
+import logo from '../../public/logo.png';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -80,9 +82,12 @@ export default function Style({ children, setToken }) {
     },
   ];
   return (
-    <Layout style={{ height: '100vh' }}>
+    <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo" />
+        <div className="logo">
+          <Image src={logo} alt="logo" />
+          PREFACE
+        </div>
         <Menu
           theme="dark"
           mode="inline"
@@ -116,12 +121,13 @@ export default function Style({ children, setToken }) {
           style={{
             margin: '24px 16px',
             padding: 24,
-            minHeight: 280,
+            minHeight: 580,
+            height: '100%',
           }}
         >
           {children}
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Capyright © Decembern and Company Inc.</Footer>
+        <Footer style={{ textAlign: 'center', color: '#656565' }}>© December and Company Inc.</Footer>
       </Layout>
     </Layout>
   );
