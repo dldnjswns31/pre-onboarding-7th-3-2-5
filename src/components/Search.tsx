@@ -1,5 +1,5 @@
 import { searchKeywordState } from '@/recoil/searchState';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 
 import styles from '../styles/Search.module.css';
@@ -10,11 +10,11 @@ export default function Search() {
   const [inputValue, setInputValue] = useState<string>('');
   const [isShow, setIsShow] = useState<boolean>(false);
 
-  const onChangeHandle = (e) => {
-    setInputValue(e.target.value);
+  const onChangeHandle = (e: React.FormEvent<HTMLInputElement>) => {
+    setInputValue((e.target as HTMLInputElement).value);
   };
 
-  const onSubmitHandle = (e) => {
+  const onSubmitHandle = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!inputValue) {
       alert('검색어를 입력해주세요!');
@@ -24,7 +24,7 @@ export default function Search() {
     setIsShow(true);
   };
 
-  const onClickHandle = (e) => {
+  const onClickHandle = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsShow(false);
     setInputValue('');

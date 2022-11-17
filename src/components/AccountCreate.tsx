@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import 'antd/dist/antd.css';
 import { Button, Input, Modal, Form, Select, InputNumber } from 'antd';
 import { brokers } from '@/utils/valueConversion';
-import { createAccount, getAccountList } from '@/apis/account';
+import { createAccount } from '@/apis/account';
 
 const AccountCreate: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
