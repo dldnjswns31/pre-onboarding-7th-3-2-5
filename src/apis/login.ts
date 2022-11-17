@@ -15,7 +15,7 @@ export const login = async (email: string, password: string) => {
 };
 
 // TODO 추후 분리 예정
-export const getAccountList = async () => {
+export const getAccountList = async (params: object) => {
   const token = getSessionStorage('token');
 
   try {
@@ -23,9 +23,7 @@ export const getAccountList = async () => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      params: {
-        page: 7,
-      },
+      params,
     });
     return data;
   } catch (err) {
@@ -74,6 +72,22 @@ export const getUserList = async () => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+    });
+    return data;
+  } catch (err) {
+    console.log('error : ', err);
+  }
+};
+
+export const getAccountDetail = async (params: object) => {
+  const token = getSessionStorage('token');
+
+  try {
+    const { data } = await instance.get('/accounts', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params,
     });
     return data;
   } catch (err) {
