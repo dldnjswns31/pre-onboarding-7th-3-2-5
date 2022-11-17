@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { accountState, selectedFilter } from '@/recoil/accountState';
 import { userState } from '@/recoil/userState';
-
 import { getAccountFilter, getAccountList, getUserList } from '@/apis/login';
 import getBrokerName from '@/utils/brokerName';
 import getAccountStatus from '@/utils/accountStatus';
@@ -10,7 +9,6 @@ import accountMasking from '@/utils/accountMasking';
 import accountActive from '@/utils/accountActive';
 import dateFormat from '@/utils/dateFormat';
 import comma from '@/utils/comma';
-
 import { Space, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
@@ -63,7 +61,6 @@ export default function AccountList() {
       dataIndex: 'assets',
       key: 'assets',
       render: (price, recode) => {
-        // const color = price > recode.payments ? '#cf1322' : '#096dd9';
         let color = '#111111';
         if (price > recode.payments) {
           color = '#cf1322';
@@ -116,7 +113,7 @@ export default function AccountList() {
   };
 
   const deleteHandler = (number: string) => {
-    const newAccountList = accountList.filter((item) => item.number !== number);
+    const newAccountList = accountList?.filter((item) => item.number !== number);
     setAccountList(newAccountList);
   };
 
@@ -129,8 +126,9 @@ export default function AccountList() {
     getAccountFilter(params).then((res) => setAccountList(res));
   }, [params]);
 
-  const data = accountList?.map((account) => {
+  const data = accountList?.map((account, idx) => {
     return {
+      key: idx,
       user_id: userNameMatch(account.user_id),
       broker_id: getBrokerName(account.broker_id),
       number: account.number,
