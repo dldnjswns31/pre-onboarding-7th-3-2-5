@@ -12,6 +12,7 @@ import { Layout, Menu, Avatar, Badge } from 'antd';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import React, { useState } from 'react';
 import { getSessionStorage } from '@/utils/token';
+import AccountCreate from './AccountCreate';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -79,7 +80,10 @@ export default function Style({ children }: { children: React.ReactNode }) {
         >
           {children}
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Capyright © Decembern and Company Inc.</Footer>
+        <div>
+          <AccountCreate />
+          <Footer style={{ textAlign: 'center' }}>Capyright © Decembern and Company Inc.</Footer>
+        </div>
       </Layout>
     </Layout>
   );
