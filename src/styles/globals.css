@@ -59,9 +59,19 @@ a {
 }
 
 .logo {
-  height: 32px;
-  margin: 16px;
-  background: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 15px;
+  color: #fff;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.logo > img {
+  width: 28px;
+  height: 100%;
+  margin-right: 7px;
 }
 
 .site-layout .site-layout-background {
