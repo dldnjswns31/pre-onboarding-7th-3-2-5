@@ -18,8 +18,10 @@ export default function Main() {
   }, []);
   return (
     <>
-      <Filter />
-      <Search />
+      <div className="menuContainer">
+        <Filter />
+        <Search />
+      </div>
       <AccountList />
     </>
   );

@@ -56,7 +56,7 @@ export const getSearchData = async (keyword: string) => {
         Authorization: `Bearer ${token}`,
       },
       params: {
-        q: keyword,
+        name_like: keyword,
       },
     });
     return data;
