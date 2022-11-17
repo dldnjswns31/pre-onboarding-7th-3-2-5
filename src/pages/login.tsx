@@ -24,6 +24,13 @@ export default function Login({ setToken }: any) {
     });
   };
 
+  useEffect(() => {
+    const token = getSessionStorage('token');
+    if (token) {
+      router.push('/');
+    }
+  }, []);
+
   return (
     <Layout className={styles.background}>
       <div className={styles.logo}>
