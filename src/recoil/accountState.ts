@@ -31,3 +31,13 @@ export const searchState = atom({
   key: 'searchState',
   default: '',
 });
+
+export const currentPageState = atom({
+  key: 'currentPageState',
+  default: 1,
+});
+
+export const totalAccountState = atom({
+  key: 'totalAccountState',
+  default: 1,
+});
