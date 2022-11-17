@@ -1,6 +1,9 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { accountState, currentPageState, totalAccountState } from '@/recoil/accountState';
+import { accountState, currentPageState, totalAccountState, selectedFilter } from '@/recoil/accountState';
 
+import { userState } from '@/recoil/userState';
+
+import { getAccountFilter, getAccountList, getUserList } from '@/apis/login';
 import getBrokerName from '@/utils/brokerName';
 import getAccountStatus from '@/utils/accountStatus';
 import accountMasking from '@/utils/accountMasking';
@@ -12,7 +15,7 @@ import { Space, Table, Pagination } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 interface DataType {
-  user_id: number;
+  user_id: string;
   broker_id: string | undefined;
   number: string;
   status: string | undefined;
@@ -82,13 +85,19 @@ const columns: ColumnsType<DataType> = [
 ];
 
 export default function AccountList() {
-  const [accountList, setAccountList] = useRecoilState(accountState);
+  const users = useRecoilValue(userState);
+  const accountList = useRecoilValue(accountState);
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
   const totalAccountItem = useRecoilValue(totalAccountState);
 
+  const userNameMatch = (userId: number) => {
+    const userData = users.filter((user) => user.id === userId)[0];
+    return userData?.name;
+  };
+
   const data = accountList?.map((account) => {
     return {
-      user_id: account.user_id,
+      user_id: userNameMatch(account.user_id),
       broker_id: getBrokerName(account.broker_id),
       number: accountMasking(account.number),
       status: getAccountStatus(account.status),
@@ -108,6 +117,7 @@ export default function AccountList() {
           defaultCurrent={currentPage}
           total={totalAccountItem}
           showSizeChanger={false}
+          hideOnSinglePage={true}
           onChange={(page) => {
             setCurrentPage(page);
           }}

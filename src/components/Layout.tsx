@@ -14,12 +14,12 @@ import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { accountState, currentPageState, selectedFilter, totalAccountState } from '@/recoil/accountState';
 import { getAccountList } from '@/apis/login';
+import { getSessionStorage } from '@/utils/token';
 
 const { Header, Sider, Content, Footer } = Layout;
 
 enum menuName {
   Account = '투자계좌',
-  User = '사용자',
   Logout = '로그아웃',
 }
 
@@ -27,12 +27,7 @@ const menuItems: ItemType[] = [
   {
     key: menuName.Account,
     icon: <BankOutlined />,
-    label: <Link href="/account">{menuName.Account}</Link>,
-  },
-  {
-    key: menuName.User,
-    icon: <UserOutlined />,
-    label: <Link href="/user">{menuName.User}</Link>,
+    label: <Link href="/">{menuName.Account}</Link>,
   },
   {
     key: menuName.Logout,
@@ -47,7 +42,7 @@ export default function Style({ children }: { children: React.ReactNode }) {
   const [_, setTotalAccountItem] = useRecoilState<number>(totalAccountState);
   const [accountList, setAccountList] = useRecoilState(accountState);
   const filterParams = useRecoilValue(selectedFilter);
-  const currentPage = useRecoilValue(currentPageState);
+  const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
 
   console.log('리렌더');
 
@@ -67,6 +62,7 @@ export default function Style({ children }: { children: React.ReactNode }) {
     getAccountList({ ...filterParams }).then((res) => {
       setTotalAccountItem(res?.data.length);
     });
+    setCurrentPage(1);
   }, [filterParams]);
 
   useEffect(() => {
@@ -77,6 +73,7 @@ export default function Style({ children }: { children: React.ReactNode }) {
     }
   }, [filterParams, currentPage]);
 
+  const userId = getSessionStorage('userEmail');
   return (
     <Layout style={{ height: '100vh' }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -105,8 +102,10 @@ export default function Style({ children }: { children: React.ReactNode }) {
               />
             </Badge>
             <Avatar shape="square" icon={<UserOutlined />} />
+            <span>{userId}님 환영합니다.</span>
           </div>
         </Header>
+
         <Content
           className="site-layout-background"
           style={{
