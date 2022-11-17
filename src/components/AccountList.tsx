@@ -2,10 +2,8 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { userState } from '@/recoil/userState';
 import { accountState, currentPageState, totalAccountState } from '@/recoil/accountState';
 import Link from 'next/link';
-
 import { accountActive, getAccountStatus, getBrokerName } from '@/utils/valueConversion';
 import { dateFormat, comma, accountMasking } from '@/utils/formatting';
-
 import { Space, Table, Pagination } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { deleteAccount } from '@/apis/account';

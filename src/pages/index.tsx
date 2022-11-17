@@ -6,6 +6,7 @@ import { getSessionStorage } from '@/utils/token';
 import AccountList from '@/components/AccountList';
 import Filter from '@/components/Filter';
 import Search from '@/components/Search';
+import AccountCreate from '@/components/AccountCreate';
 
 export default function Main() {
   const router = useRouter();
@@ -19,7 +20,10 @@ export default function Main() {
   return (
     <>
       <div className="menuContainer">
-        <Filter />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Filter />
+          <AccountCreate />
+        </div>
         <Search />
       </div>
       <AccountList />
