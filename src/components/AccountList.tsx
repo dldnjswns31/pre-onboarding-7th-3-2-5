@@ -28,6 +28,11 @@ export default function AccountList() {
 
   const columns: ColumnsType<DataType> = [
     {
+      title: '계좌명',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
       title: '고객명',
       dataIndex: 'user_id',
       key: 'user_id',
@@ -47,11 +52,6 @@ export default function AccountList() {
       title: '계좌상태',
       dataIndex: 'status',
       key: 'status',
-    },
-    {
-      title: '계좌명',
-      dataIndex: 'name',
-      key: 'name',
     },
     {
       title: '평가금액',
