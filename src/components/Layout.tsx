@@ -17,7 +17,6 @@ const { Header, Sider, Content, Footer } = Layout;
 
 enum menuName {
   Account = '투자계좌',
-  User = '사용자',
   Logout = '로그아웃',
 }
 
@@ -25,12 +24,7 @@ const menuItems: ItemType[] = [
   {
     key: menuName.Account,
     icon: <BankOutlined />,
-    label: <Link href="/account">{menuName.Account}</Link>,
-  },
-  {
-    key: menuName.User,
-    icon: <UserOutlined />,
-    label: <Link href="/user">{menuName.User}</Link>,
+    label: <Link href="/">{menuName.Account}</Link>,
   },
   {
     key: menuName.Logout,
