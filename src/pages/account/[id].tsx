@@ -98,7 +98,7 @@ export default function AccountId() {
   return (
     <>
       <h2>계좌 정보</h2>
-      <Table columns={columns} dataSource={accountDetail} pagination={false} />
+      <Table bordered columns={columns} dataSource={accountDetail} pagination={false} />
     </>
   );
 }
