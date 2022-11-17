@@ -1,10 +1,18 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import React, { useEffect, useState } from 'react';
-import { getSessionStorage, removeSessionStorage } from '@/utils/token';
-import { getUserList } from '@/apis/login';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+
+import router from 'next/router';
+import Link from 'next/link';
+import Image from 'next/image';
+
 import { accountState, currentPageState, selectedFilter, totalAccountState } from '@/recoil/accountState';
 import { searchKeywordState } from '@/recoil/searchState';
 import { userState } from '@/recoil/userState';
+
+import { getSessionStorage, removeSessionStorage } from '@/utils/token';
+import { getAccountList } from '@/apis/account';
+import { getUserList } from '@/apis/login';
+
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import 'antd/dist/antd.css';
 import {
@@ -16,12 +24,9 @@ import {
   BellOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Avatar, Badge } from 'antd';
+
 import AccountCreate from './AccountCreate';
-import router from 'next/router';
-import Link from 'next/link';
-import Image from 'next/image';
 import logo from '../../public/logo.png';
-import { getAccountList } from '@/apis/account';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -31,15 +36,19 @@ enum menuName {
 }
 
 export default function Style({ children, setToken }) {
-  const setUserList = useSetRecoilState(userState);
-  const [collapsed, setCollapsed] = useState<boolean>(false);
-  const [currentMenu, setCurrentMenu] = useState<string>(menuName.Account);
-  const searchKeyword = useRecoilValue(searchKeywordState);
-  const setTotalAccountItem = useSetRecoilState<number>(totalAccountState);
-  const setAccountList = useSetRecoilState(accountState);
-  const filterParams = useRecoilValue(selectedFilter);
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
 
+  const setUserList = useSetRecoilState(userState);
+  const setTotalAccountItem = useSetRecoilState<number>(totalAccountState);
+  const setAccountList = useSetRecoilState(accountState);
+
+  const searchKeyword = useRecoilValue(searchKeywordState);
+  const filterParams = useRecoilValue(selectedFilter);
+
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [currentMenu, setCurrentMenu] = useState<string>(menuName.Account);
+
+  // 첫 페이지네이션 크기 설정 및 mapping용 사용자명 fetching
   useEffect(() => {
     getAccountList().then((res) => {
       setTotalAccountItem(res?.data.length);
@@ -47,6 +56,7 @@ export default function Style({ children, setToken }) {
     getUserList().then((res) => setUserList(res));
   }, []);
 
+  // filter나 search가 바뀔때마다 pagination 크기 다시 계산
   useEffect(() => {
     getAccountList({ ...filterParams, name_like: searchKeyword }).then((res) => {
       setTotalAccountItem(res?.data.length);
@@ -54,6 +64,7 @@ export default function Style({ children, setToken }) {
     setCurrentPage(1);
   }, [filterParams, searchKeyword]);
 
+  // filter, pagination, search가 바뀔때마다 새로운 accountList fetching
   useEffect(() => {
     getAccountList({ ...filterParams, _page: currentPage, name_like: searchKeyword }).then((res) => {
       setAccountList(res?.data);
