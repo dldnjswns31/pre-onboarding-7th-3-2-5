@@ -3,17 +3,11 @@ import 'antd/dist/antd.css';
 import '../styles/Input.module.css';
 import { Button, Input, Modal, Form, Select, InputNumber } from 'antd';
 import { brokers } from '@/utils/valueConversion';
-import { createAccount } from '@/apis/account';
-import { getAccountList } from '@/apis/login';
+import { createAccount, getAccountList } from '@/apis/account';
 
 const AccountCreate: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { Option } = Select;
-  console.log(
-    getAccountList().then((res) => {
-      console.log(res);
-    }),
-  );
   const showModal = () => {
     setIsModalOpen(true);
   };

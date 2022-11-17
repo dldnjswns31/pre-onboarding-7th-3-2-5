@@ -1,7 +1,7 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import React, { useEffect, useState } from 'react';
 import { getSessionStorage, removeSessionStorage } from '@/utils/token';
-import { getAccountList, getUserList } from '@/apis/login';
+import { getUserList } from '@/apis/login';
 import { accountState, currentPageState, selectedFilter, totalAccountState } from '@/recoil/accountState';
 import { searchKeywordState } from '@/recoil/searchState';
 import { userState } from '@/recoil/userState';
@@ -21,6 +21,7 @@ import router from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
 import logo from '../../public/logo.png';
+import { getAccountList } from '@/apis/account';
 
 const { Header, Sider, Content, Footer } = Layout;
 

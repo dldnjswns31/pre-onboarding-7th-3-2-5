@@ -1,30 +1,36 @@
-import { getSessionStorage, setSessionStorage } from '@/utils/token';
-import axios, { AxiosRequestConfig } from 'axios';
+import instance from './core/instance';
 
-const instance = axios.create({ baseURL: '/api' });
+export const getAccountList = async (params?: object) => {
+  try {
+    const res = await instance.get('/accounts', {
+      params,
+    });
+    return res;
+  } catch (err) {
+    console.log('error : ', err);
+  }
+};
+
+export const editAccountData = async (id: number, editData: object) => {
+  try {
+    const { data } = await instance.put(`/accounts/${id}`, editData);
+    return data;
+  } catch (err) {
+    console.log('error : ', err);
+  }
+};
 
 export const deleteAccount = async (id: number) => {
-  const token = getSessionStorage('token');
   try {
-    await instance.delete(`/accounts/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    await instance.delete(`/accounts/${id}`);
   } catch (err) {
     console.log('error : ', err);
   }
 };
 
 export const createAccount = async (...values: any[]) => {
-  const token = getSessionStorage('token');
-  console.log('token', token);
   try {
-    await instance.post(`/accounts`, values[0], {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    await instance.post(`/accounts`, values[0]);
   } catch (err) {
     console.log('error', err);
   }

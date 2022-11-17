@@ -4,12 +4,12 @@ import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/recoil/userState';
 
-import { editAccountData, getAccountList } from '@/apis/login';
 import { accountActive, getAccountStatus, getBrokerName } from '@/utils/valueConversion';
 import { dateFormat, comma, accountMasking } from '@/utils/formatting';
 
 import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { editAccountData, getAccountList } from '@/apis/account';
 
 interface DataType {
   id: number;
