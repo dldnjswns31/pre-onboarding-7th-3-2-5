@@ -15,7 +15,7 @@ import { Space, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 interface DataType {
-  user_id: number;
+  user_id: string;
   broker_id: string | undefined;
   number: string;
   status: string | undefined;
@@ -119,8 +119,7 @@ export default function AccountList() {
 
   const data = accountList?.map((account) => {
     return {
-      id: account.id,
-      user_id: account.user_id,
+      user_id: userNameMatch(account.user_id),
       broker_id: getBrokerName(account.broker_id),
       number: account.number,
       status: getAccountStatus(account.status),
