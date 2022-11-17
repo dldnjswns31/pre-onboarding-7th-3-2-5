@@ -1,7 +1,7 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getSessionStorage } from '@/utils/token';
+import { getSessionStorage, removeSessionStorage } from '@/utils/token';
 import { getAccountList, getUserList } from '@/apis/login';
 import { accountState, currentPageState, selectedFilter, totalAccountState } from '@/recoil/accountState';
 import { searchKeywordState } from '@/recoil/searchState';
@@ -17,6 +17,7 @@ import {
   BellOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Avatar, Badge } from 'antd';
+import router from 'next/router';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -25,20 +26,7 @@ enum menuName {
   Logout = '로그아웃',
 }
 
-const menuItems: ItemType[] = [
-  {
-    key: menuName.Account,
-    icon: <BankOutlined />,
-    label: <Link href="/">{menuName.Account}</Link>,
-  },
-  {
-    key: menuName.Logout,
-    icon: <LogoutOutlined />,
-    label: <Link href="/">{menuName.Logout}</Link>,
-  },
-];
-
-export default function Style({ children }: { children: React.ReactNode }) {
+export default function Style({ children, setToken }) {
   const setUserList = useSetRecoilState(userState);
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [currentMenu, setCurrentMenu] = useState<string>(menuName.Account);
@@ -47,8 +35,6 @@ export default function Style({ children }: { children: React.ReactNode }) {
   const setAccountList = useSetRecoilState(accountState);
   const filterParams = useRecoilValue(selectedFilter);
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
-
-  console.log('리렌더');
 
   useEffect(() => {
     getAccountList().then((res) => {
@@ -71,6 +57,28 @@ export default function Style({ children }: { children: React.ReactNode }) {
   }, [filterParams, currentPage, searchKeyword]);
 
   const userId = getSessionStorage('userEmail');
+  const menuItems: ItemType[] = [
+    {
+      key: menuName.Account,
+      icon: <BankOutlined />,
+      label: <Link href="/">{menuName.Account}</Link>,
+    },
+    {
+      key: menuName.Logout,
+      icon: <LogoutOutlined />,
+      label: (
+        <div
+          onClick={() => {
+            removeSessionStorage();
+            setToken(null);
+            router.push('/login');
+          }}
+        >
+          {menuName.Logout}
+        </div>
+      ),
+    },
+  ];
   return (
     <Layout style={{ height: '100vh' }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
