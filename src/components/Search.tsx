@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 export default function Search() {
   const [searchKeyword, setKeyword] = useState<string>('');
+
   const onChangeHandle = (e) => {
     setKeyword(e.target.value);
   };
@@ -12,8 +13,6 @@ export default function Search() {
     getSearchData(searchKeyword).then((res) => console.log(res));
     setKeyword('');
   };
-
-  console.log('searchKeyword', searchKeyword);
 
   return (
     <form onSubmit={onSubmitHandle}>
