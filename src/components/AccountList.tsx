@@ -85,14 +85,15 @@ const columns: ColumnsType<DataType> = [
   },
 ];
 
-export default function AccountList() {
-  const [users, setUserList] = useRecoilState(userState);
-  const [accountList, setAccountList] = useRecoilState(accountState);
-  const params = useRecoilValue(selectedFilter);
 
   const userNameMatch = (userId: number) => {
     const userData = users.filter((user) => user.id === userId)[0];
     return userData?.name;
+  };
+
+  const deleteHandler = (number: string) => {
+    const newAccountList = accountList.filter((item) => item.number !== number);
+    setAccountList(newAccountList);
   };
 
   useEffect(() => {
