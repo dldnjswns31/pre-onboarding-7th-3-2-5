@@ -1,11 +1,11 @@
 import { useRecoilState } from 'recoil';
-import { selectedBroker } from '@/recoil/accountState';
+import { selectedFilter } from '@/recoil/accountState';
 
 import { brokers } from '@/utils/brokerName';
 import { statusList } from '@/utils/accountStatus';
 
 export default function Filter() {
-  const [selected, setSelected] = useRecoilState(selectedBroker);
+  const [selected, setSelected] = useRecoilState(selectedFilter);
 
   const onChangeHandle = (e) => {
     const { name, value } = e.target;

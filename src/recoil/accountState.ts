@@ -22,7 +22,7 @@ export const accountState = atom<accountListType>({
   default: [],
 });
 
-export const selectedBroker = atom({
-  key: 'selectedBroker',
+export const selectedFilter = atom({
+  key: 'selectedFilter',
   default: {},
 });

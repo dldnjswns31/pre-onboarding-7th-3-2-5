@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { accountState, selectedBroker } from '@/recoil/accountState';
+import { accountState, selectedFilter } from '@/recoil/accountState';
 
 import { getAccountFilter, getAccountList } from '@/apis/login';
 import getBrokerName from '@/utils/brokerName';
@@ -85,7 +85,7 @@ const columns: ColumnsType<DataType> = [
 
 export default function AccountList() {
   const [accountList, setAccount] = useRecoilState(accountState);
-  const params = useRecoilValue(selectedBroker);
+  const params = useRecoilValue(selectedFilter);
 
   useEffect(() => {
     getAccountList().then((res) => setAccount(res));
