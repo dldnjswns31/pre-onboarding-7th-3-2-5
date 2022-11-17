@@ -26,6 +26,69 @@ interface DataType {
   created_at: string;
 }
 
+const columns: ColumnsType<DataType> = [
+  {
+    title: '고객명',
+    dataIndex: 'user_id',
+    key: 'user_id',
+  },
+  {
+    title: '브로커명',
+    dataIndex: 'broker_id',
+    key: 'broker_id',
+  },
+  {
+    title: '계좌번호',
+    dataIndex: 'number',
+    key: 'number',
+    render: (text) => <a>{text}</a>,
+  },
+  {
+    title: '계좌상태',
+    dataIndex: 'status',
+    key: 'status',
+  },
+  {
+    title: '계좌명',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: '평가금액',
+    dataIndex: 'assets',
+    key: 'assets',
+    render: (price, recode) => {
+      console.log('recode', recode);
+      console.log('price', price);
+      return <div style={{ color: 'red-7' }}>{price}</div>;
+    },
+  },
+  {
+    title: '입금금액',
+    dataIndex: 'payments',
+    key: 'payments',
+  },
+  {
+    title: '계좌 활성화',
+    dataIndex: 'is_active',
+    key: 'is_active',
+  },
+  {
+    title: '계좌 개설일',
+    dataIndex: 'created_at',
+    key: 'created_at',
+  },
+  {
+    title: 'Action',
+    key: 'action',
+    render: (_) => (
+      <Space size="middle">
+        <a>Delete</a>
+      </Space>
+    ),
+  },
+];
+
 export default function AccountList() {
   const [users, setUserList] = useRecoilState(userState);
   const [accountList, setAccountList] = useRecoilState(accountState);
@@ -62,6 +125,18 @@ export default function AccountList() {
       title: '평가금액',
       dataIndex: 'assets',
       key: 'assets',
+      render: (price, recode) => {
+        // const color = price > recode.payments ? '#cf1322' : '#096dd9';
+        let color = '#111111';
+        if (price > recode.payments) {
+          color = '#cf1322';
+        }
+        if (price < recode.payments) {
+          color = '#096dd9';
+        }
+
+        return <div style={{ color: color }}>{price}</div>;
+      },
     },
     {
       title: '입금금액',
@@ -99,7 +174,7 @@ export default function AccountList() {
   ];
 
   const userNameMatch = (userId: number) => {
-    const userData = users.filter((user) => user.id === userId)[0];
+    const userData = users?.filter((user) => user.id === userId)[0];
     return userData?.name;
   };
 
