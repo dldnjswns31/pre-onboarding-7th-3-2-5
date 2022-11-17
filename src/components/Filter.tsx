@@ -31,8 +31,10 @@ export default function Filter() {
     <div className="filter">
       <select name="broker_id" className={styles.select} id="broker" onChange={onChangeHandle}>
         <option value="">전체 브로커</option>
-        {Object.keys(brokers).map((broker) => (
-          <option value={broker}>{brokers[broker]}</option>
+        {Object.keys(brokers).map((broker, idx) => (
+          <option key={idx} value={broker}>
+            {brokers[broker]}
+          </option>
         ))}
       </select>
       <select name="is_active" className={styles.select} id="active" onChange={onChangeHandle}>
@@ -42,8 +44,10 @@ export default function Filter() {
       </select>
       <select name="status" className={styles.select} id="status" onChange={onChangeHandle}>
         <option value="">계좌 상태</option>
-        {Object.keys(statusList).map((status) => (
-          <option value={statusList[status]}>{status}</option>
+        {Object.keys(statusList).map((status, idx) => (
+          <option key={idx} value={statusList[status]}>
+            {status}
+          </option>
         ))}
       </select>
     </div>
