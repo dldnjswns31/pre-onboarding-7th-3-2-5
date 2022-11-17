@@ -1,18 +1,12 @@
-import { useEffect } from 'react';
-import Link from 'next/link';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { accountState, selectedFilter } from '@/recoil/accountState';
 import { userState } from '@/recoil/userState';
+import { accountState, currentPageState, totalAccountState } from '@/recoil/accountState';
+import Link from 'next/link';
 
-import { getAccountFilter, getAccountList, getUserList } from '@/apis/login';
-import getBrokerName from '@/utils/brokerName';
-import getAccountStatus from '@/utils/accountStatus';
-import accountMasking from '@/utils/accountMasking';
-import accountActive from '@/utils/accountActive';
-import dateFormat from '@/utils/dateFormat';
-import comma from '@/utils/comma';
+import { accountActive, getAccountStatus, getBrokerName } from '@/utils/valueConversion';
+import { dateFormat, comma, accountMasking } from '@/utils/formatting';
 
-import { Space, Table } from 'antd';
+import { Space, Table, Pagination } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 interface DataType {
@@ -28,11 +22,17 @@ interface DataType {
 }
 
 export default function AccountList() {
-  const [users, setUserList] = useRecoilState(userState);
+  const userList = useRecoilValue(userState);
   const [accountList, setAccountList] = useRecoilState(accountState);
-  const params = useRecoilValue(selectedFilter);
+  const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
+  const totalAccountItem = useRecoilValue(totalAccountState);
 
   const columns: ColumnsType<DataType> = [
+    {
+      title: '계좌명',
+      dataIndex: 'name',
+      key: 'name',
+    },
     {
       title: '고객명',
       dataIndex: 'user_id',
@@ -55,14 +55,20 @@ export default function AccountList() {
       key: 'status',
     },
     {
-      title: '계좌명',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
       title: '평가금액',
       dataIndex: 'assets',
       key: 'assets',
+      render: (price, recode) => {
+        let color = '#111111';
+        if (price > recode.payments) {
+          color = '#cf1322';
+        }
+        if (price < recode.payments) {
+          color = '#096dd9';
+        }
+
+        return <div style={{ color: color }}>{price}</div>;
+      },
     },
     {
       title: '입금금액',
@@ -91,26 +97,18 @@ export default function AccountList() {
   ];
 
   const userNameMatch = (userId: number) => {
-    const userData = users.filter((user) => user.id === userId)[0];
+    const userData = userList?.filter((user) => user.id === userId)[0];
     return userData?.name;
   };
 
   const deleteHandler = (number: string) => {
-    const newAccountList = accountList.filter((item) => item.number !== number);
+    const newAccountList = accountList?.filter((item) => item.number !== number);
     setAccountList(newAccountList);
   };
 
-  useEffect(() => {
-    getAccountList().then((res) => setAccountList(res));
-    getUserList().then((res) => setUserList(res));
-  }, []);
-
-  useEffect(() => {
-    getAccountFilter(params).then((res) => setAccountList(res));
-  }, [params]);
-
-  const data = accountList?.map((account) => {
+  const data = accountList?.map((account, idx) => {
     return {
+      key: idx,
       user_id: userNameMatch(account.user_id),
       broker_id: getBrokerName(account.broker_id),
       number: account.number,
@@ -123,5 +121,29 @@ export default function AccountList() {
     };
   });
 
-  return <Table columns={columns} dataSource={data} />;
+  return (
+    <>
+      <Table columns={columns} dataSource={data} pagination={false} />
+      <div className="pagination__container">
+        <Pagination
+          defaultCurrent={1}
+          current={currentPage}
+          total={totalAccountItem}
+          showSizeChanger={false}
+          hideOnSinglePage={true}
+          onChange={(page) => {
+            setCurrentPage(page);
+          }}
+        />
+      </div>
+      <style jsx>{`
+        .pagination__container {
+          display: inline-flex;
+          justify-content: center;
+          width: 100%;
+          margin-top: 2rem;
+        }
+      `}</style>
+    </>
+  );
 }

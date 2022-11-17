@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
       {hasToken ? (
-        <Style>
+        <Style setToken={setToken}>
           <Component {...pageProps} />
         </Style>
       ) : (
