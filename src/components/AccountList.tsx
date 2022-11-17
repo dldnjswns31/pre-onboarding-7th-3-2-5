@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import Link from 'next/link';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { accountState, selectedFilter } from '@/recoil/accountState';
 import { userState } from '@/recoil/userState';
@@ -46,7 +47,7 @@ export default function AccountList() {
       title: '계좌번호',
       dataIndex: 'number',
       key: 'number',
-      render: (text) => <a>{accountMasking(text)}</a>,
+      render: (account) => <Link href={`/account/${account}`}>{accountMasking(account)}</Link>,
     },
     {
       title: '계좌상태',
@@ -62,18 +63,6 @@ export default function AccountList() {
       title: '평가금액',
       dataIndex: 'assets',
       key: 'assets',
-      render: (price, recode) => {
-        // const color = price > recode.payments ? '#cf1322' : '#096dd9';
-        let color = '#111111';
-        if (price > recode.payments) {
-          color = '#cf1322';
-        }
-        if (price < recode.payments) {
-          color = '#096dd9';
-        }
-
-        return <div style={{ color: color }}>{price}</div>;
-      },
     },
     {
       title: '입금금액',
@@ -91,27 +80,18 @@ export default function AccountList() {
       key: 'created_at',
     },
     {
-      title: '계좌관리',
+      title: 'Action',
       key: 'action',
-      render: (_, record) => {
-        return (
-          <Space size="middle">
-            <button
-              style={{ border: 'none', backgroundColor: 'white', color: '#1890ff' }}
-              onClick={() => {
-                deleteHandler(record.number);
-              }}
-            >
-              삭제
-            </button>
-          </Space>
-        );
-      },
+      render: (_) => (
+        <Space size="middle">
+          <a>Delete</a>
+        </Space>
+      ),
     },
   ];
 
   const userNameMatch = (userId: number) => {
-    const userData = users?.filter((user) => user.id === userId)[0];
+    const userData = users.filter((user) => user.id === userId)[0];
     return userData?.name;
   };
 
