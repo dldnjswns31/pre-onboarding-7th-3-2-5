@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { userState } from '@/recoil/userState';
 
-import { getAccountList, getUserList, getAccountDetail } from '@/apis/login';
+import { getAccountList } from '@/apis/login';
 import { accountActive, getAccountStatus, getBrokerName } from '@/utils/valueConversion';
 import { dateFormat, comma, accountMasking } from '@/utils/formatting';
 
-import { Space, Table } from 'antd';
+import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 interface DataType {
@@ -24,11 +24,16 @@ interface DataType {
 }
 
 export default function AccountId() {
-  const [users, setUserList] = useRecoilState(userState);
+  const users = useRecoilValue(userState);
   const [accountDetail, setAccountDetail] = useState([]);
   const router = useRouter();
   const id = router.query.id as string;
   const columns: ColumnsType<DataType> = [
+    {
+      title: '계좌명',
+      dataIndex: 'name',
+      key: 'name',
+    },
     {
       title: '고객명',
       dataIndex: 'user_id',
@@ -45,17 +50,13 @@ export default function AccountId() {
       title: '계좌번호',
       dataIndex: 'number',
       key: 'number',
+      render: (broker) => accountMasking(broker),
     },
     {
       title: '계좌상태',
       dataIndex: 'status',
       key: 'status',
       render: (status) => getAccountStatus(status),
-    },
-    {
-      title: '계좌명',
-      dataIndex: 'name',
-      key: 'name',
     },
     {
       title: '평가금액',
@@ -94,6 +95,8 @@ export default function AccountId() {
     }
     getAccountList({ number_like: id }).then((res) => setAccountDetail(res?.data));
   }, [id]);
+
+  const editBtnHandle = () => {};
 
   return (
     <>
