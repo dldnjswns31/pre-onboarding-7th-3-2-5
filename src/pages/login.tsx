@@ -1,14 +1,21 @@
 import { useRouter } from 'next/router';
+
+import { getSessionStorage } from '@/utils/token';
 import { login } from '@/apis/login';
+
 import { Button, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
-export default function Login() {
+export default function Login({ setToken }) {
   const router = useRouter();
   const onFinish = (values: { email: string; password: string }) => {
     const { email, password } = values;
 
-    login(email, password).then((res) => router.push('/'));
+    login(email, password).then((res) => {
+      const token = getSessionStorage('token');
+      setToken(token);
+      router.push('/');
+    });
   };
 
   return (
