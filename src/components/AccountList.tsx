@@ -98,10 +98,16 @@ export default function AccountList() {
               onClick={() => {
                 deleteAccount(record.id);
                 deleteHandler(record.id);
+                alert('삭제되었습니다.');
               }}
             >
               삭제
             </button>
+            <style jsx>{`
+              button {
+                cursor: pointer;
+              }
+            `}</style>
           </Space>
         );
       },
