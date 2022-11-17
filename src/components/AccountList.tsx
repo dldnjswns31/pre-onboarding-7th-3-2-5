@@ -85,8 +85,8 @@ export default function AccountList() {
         return (
           <Space size="middle">
             <button
+              style={{ border: 'none', backgroundColor: 'white', color: '#1890ff' }}
               onClick={() => {
-                console.log(record);
                 deleteHandler(record.number);
               }}
             >
