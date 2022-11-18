@@ -186,18 +186,23 @@ Next.js를 제대로 활용하지 못한 점 :
         - faker 데이터 : uuid, name, userId, created_at, updated_at
 
         faker 데이터를 생성한 이유: 생성 기능(Create)을 구현하기 위해 임의의 랜덤 데이터를 `faker`를 통해 만들었습니다. 
+       ![create](https://user-images.githubusercontent.com/28972561/202608561-360d4b6b-1f94-49d2-b063-715fd42d7001.gif)
 
     - 조회
         - 전체 계좌 목록을 확인할 수 있습니다.
         - 고객명, `broker.json`을 참조한 브로커명, `마스킹 처리`된 계좌번호, `accountStatus.json`을 참조한 계좌상태, 계좌명, 평가금액, 입금금액, 계좌 활성화 여부, 계좌개설일 을 확인할 수 있습니다.
-        - 계좌 리스트에서 계좌번호를 누르면 계좌상세 화면으로 이동합니다.
+        - 계좌 리스트에서 계좌번호를 누르면 계좌상세 화면으로 이동합니다.!
+       ![read](https://user-images.githubusercontent.com/28972561/202608285-ead5fe14-4904-435e-b3c4-3e70f05cad3a.gif)
     - 수정
         - 수정모드인지 아닌지 확인하기 위해 useState로 상태 관리를 하고있습니다.
         - 수정 버튼을 클릭하면 edit모드로 전환되며 계좌 활성화 여부를 수정할 수 있습니다.
         - 제출 버튼을 클릭했을 때 새로운 정보로 서버에 수정을 요청합니다.
         - 이후 재렌더링 되며 수정된 값을 확인할 수 있습니다.
+       ![updategif](https://user-images.githubusercontent.com/28972561/202608334-b7c5a585-e175-4899-a158-cc7d2e2da08e.gif)
     - 삭제
         - 전체 계좌목록에서 원하는 계좌를 삭제할 수 있습니다.
+      ![delete](https://user-images.githubusercontent.com/28972561/202608351-839b6e81-943c-41ca-af09-a3bb5061fa1d.gif)
+
 2. 계좌목록 필터 및 검색 기능
     - 필터 선택 값과 검색 키워드 값을 상태로 관리하여  필터링 할 값을 선택하거나 검색 버튼을 누르면 params에 값이 담겨 서버로 요청을 보내게 됩니다.
     - 요청을 받은 서버는 params 값을 확인하여 원하는 데이터를 반환해줍니다.
