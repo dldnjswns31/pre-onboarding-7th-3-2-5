@@ -42,7 +42,6 @@ const AccountCreate: React.FC = () => {
               })}
             </Select>
           </Form.Item>
-          ``
           <Form.Item name="number" label="계좌번호">
             <Input placeholder="(-) 빼고 입력해 주세요(최대12자리)" style={{ width: 300 }} maxLength={12} required />
           </Form.Item>
