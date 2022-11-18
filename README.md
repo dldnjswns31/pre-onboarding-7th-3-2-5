@@ -64,7 +64,7 @@ $ yarn dev
 
 [배포링크]()
 
-- 해당 프로젝트는 AWS S3로 배포하였습니다.
+- 해당 프로젝트는 Vercel로 배포하였습니다.
 - 테스트 계정
 
 ```jsx
@@ -210,18 +210,11 @@ Next.js를 제대로 활용하지 못한 점 :
    
     
     - 필터 코드
-       
+    https://github.com/WantedPreonboardingFE5team/pre-onboarding-7th-3-2-5/blob/c0fe9d196f3b8db5e88bb9b0068d9b5d369a6b4a/src/components/Filter.tsx#L9-L55
     - 서치 코드
-
+    https://github.com/WantedPreonboardingFE5team/pre-onboarding-7th-3-2-5/blob/c0fe9d196f3b8db5e88bb9b0068d9b5d369a6b4a/src/components/Search.tsx#L7-L47
     - 레이아웃 코드
-      ```jsx
-      // Layout.tsx 코드 발췌
-      useEffect(() => {
-        getAccountList({ ...filterParams, _page: currentPage, name_like: searchKeyword }).then((res) => {
-          setAccountList(res?.data);
-        });
-      }, [filterParams, currentPage, searchKeyword]);
-      ```
+    https://github.com/WantedPreonboardingFE5team/pre-onboarding-7th-3-2-5/blob/c0fe9d196f3b8db5e88bb9b0068d9b5d369a6b4a/src/components/Layout.tsx#L75-L80
     
 3. 페이지네이션 
     - `json-server` 의 Paginate API 를 사용하여 구현했습니다.
