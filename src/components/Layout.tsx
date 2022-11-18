@@ -1,7 +1,7 @@
 import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import router from 'next/router';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -36,9 +36,11 @@ enum menuName {
 export default function Style({
   children,
   setToken,
+  hasToken,
 }: {
   children: ReactNode;
   setToken: Dispatch<SetStateAction<string | null>>;
+  hasToken: string | null;
 }) {
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
 
@@ -51,6 +53,8 @@ export default function Style({
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [currentMenu, setCurrentMenu] = useState<string>(menuName.Account);
+
+  const router = useRouter();
 
   getAccountList().then((res) => console.log(res));
 
@@ -77,6 +81,12 @@ export default function Style({
     });
   }, [filterParams, currentPage, searchKeyword]);
 
+  useEffect(() => {
+    if (hasToken === null) {
+      router.push('/login');
+    }
+  }, [hasToken]);
+
   const userId = getSessionStorage('userEmail');
   const menuItems: ItemType[] = [
     {
@@ -101,54 +111,64 @@ export default function Style({
     },
   ];
   return (
-    <Layout>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo">
-          <Image src={logo} alt="logo" />
-          PREFACE
-        </div>
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={[currentMenu]}
-          onClick={(e) => setCurrentMenu(e.key)}
-          items={menuItems}
-        />
-      </Sider>
-      <Layout className="site-layout">
-        <Header className="site-layout-background header" style={{ padding: 0 }}>
-          <div className="trigger" onClick={() => setCollapsed(!collapsed)}>
-            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            <span>{currentMenu}</span>
+    <div className="container">
+      <Layout style={{ width: '100%', height: '100%' }}>
+        <Sider trigger={null} collapsible collapsed={collapsed}>
+          <div className="logo">
+            <Image src={logo} alt="logo" />
+            PREFACE
           </div>
-          <div className="header-menu">
-            <Badge status="warning" text="개발" />
-            <Badge count={100}>
-              <Avatar
-                style={{ backgroundColor: 'transparent', color: 'black' }}
-                icon={<BellOutlined />}
-                size="default"
-              />
-            </Badge>
-            <Avatar shape="square" icon={<UserOutlined />} />
-            <span>{userId}님 환영합니다.</span>
-          </div>
-        </Header>
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultSelectedKeys={[currentMenu]}
+            onClick={(e) => setCurrentMenu(e.key)}
+            items={menuItems}
+          />
+        </Sider>
+        <Layout className="site-layout">
+          <Header className="site-layout-background header" style={{ padding: 0 }}>
+            <div className="trigger" onClick={() => setCollapsed(!collapsed)}>
+              {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              <span>{currentMenu}</span>
+            </div>
+            <div className="header-menu">
+              <Badge status="warning" text="개발" />
+              <Badge count={100}>
+                <Avatar
+                  style={{ backgroundColor: 'transparent', color: 'black' }}
+                  icon={<BellOutlined />}
+                  size="default"
+                />
+              </Badge>
+              <Avatar shape="square" icon={<UserOutlined />} />
+              <span>{userId}님 환영합니다.</span>
+            </div>
+          </Header>
 
-        <Content
-          className="site-layout-background"
-          style={{
-            margin: '24px 16px',
-            padding: 24,
-            minHeight: 580,
-            height: '100%',
-          }}
-        >
-          {children}
-        </Content>
+          <Content
+            className="site-layout-background"
+            style={{
+              margin: '24px 16px',
+              padding: 24,
+              minHeight: 580,
+              height: '100%',
+            }}
+          >
+            {children}
+          </Content>
 
-        <Footer style={{ textAlign: 'center', color: '#656565' }}>© December and Company Inc.</Footer>
+          <Footer style={{ textAlign: 'center', color: '#656565' }}>© December and Company Inc.</Footer>
+        </Layout>
       </Layout>
-    </Layout>
+      <style jsx>{`
+        .container {
+          width: 100vw;
+          min-width: 1280px;
+          height: 100vh;
+          min-height: 1024px;
+        }
+      `}</style>
+    </div>
   );
 }

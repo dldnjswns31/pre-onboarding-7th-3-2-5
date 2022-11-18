@@ -42,11 +42,10 @@ const AccountCreate: React.FC = () => {
               })}
             </Select>
           </Form.Item>
-
+          ``
           <Form.Item name="number" label="계좌번호">
             <Input placeholder="(-) 빼고 입력해 주세요(최대12자리)" style={{ width: 300 }} maxLength={12} required />
           </Form.Item>
-
           <Form.Item name="status" label="계좌상태">
             <Select id="status_selector" placeholder="계좌 상태 선택">
               <Option value={1}>입금대기</Option>
@@ -55,15 +54,12 @@ const AccountCreate: React.FC = () => {
               <Option value={4}>해지</Option>
             </Select>
           </Form.Item>
-
-          <Form.Item name="payment" label="평가금액">
+          <Form.Item name="assets" label="평가금액">
             <Input style={{ width: 300 }} required />
           </Form.Item>
-
-          <Form.Item name="assets" label="입금금액">
+          <Form.Item name="payments" label="입금금액">
             <Input style={{ width: 300 }} required />
           </Form.Item>
-
           <Form.Item name="is_active" label="계정활성화">
             <Select id="active_selector" placeholder="계정 활성화 선택">
               <Option value={true}>활성화</Option>

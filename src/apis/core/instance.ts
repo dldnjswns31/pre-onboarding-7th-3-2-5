@@ -1,5 +1,5 @@
 import { getSessionStorage } from '@/utils/token';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 
 const instance = axios.create({ baseURL: '/api' });
 
