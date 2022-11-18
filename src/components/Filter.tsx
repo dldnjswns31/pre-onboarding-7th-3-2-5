@@ -34,7 +34,6 @@ export default function Filter() {
         className={styles.select}
         id="broker"
         onChange={onChangeHandle}
-        value={selected.broker_id}
       >
         <option value="">브로커 선택</option>
         {Object.keys(brokers).map((broker, idx) => (
@@ -43,7 +42,7 @@ export default function Filter() {
           </option>
         ))}
       </select>
-      <select name="status" className={styles.select} id="status" onChange={onChangeHandle} value={selected.status}>
+      <select name="status" className={styles.select} id="status" onChange={onChangeHandle}>
         <option value="">계좌 상태 선택</option>
         {Object.keys(statusList).map((status, idx) => (
           <option key={idx} value={statusList[status]}>
@@ -56,7 +55,6 @@ export default function Filter() {
         className={styles.select}
         id="active"
         onChange={onChangeHandle}
-        value={selected.is_active}
       >
         <option value="">계좌 활성화 선택</option>
         <option value="true">활성화</option>
