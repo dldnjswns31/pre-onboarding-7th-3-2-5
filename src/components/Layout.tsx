@@ -56,8 +56,6 @@ export default function Style({
 
   const router = useRouter();
 
-  getAccountList().then((res) => console.log(res));
-
   // 첫 페이지네이션 크기 설정 및 mapping용 사용자명 fetching
   useEffect(() => {
     getAccountList().then((res) => {
