@@ -12,7 +12,6 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-// TODO 추후 분리 예정
 export const getUserList = async () => {
   try {
     const { data } = await instance.get('/users');

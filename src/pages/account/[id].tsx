@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, MouseEvent } from 'react';
 import { useRouter } from 'next/router';
 
 import { useRecoilValue } from 'recoil';
@@ -78,7 +78,7 @@ export default function AccountId() {
       dataIndex: 'is_active',
       key: 'is_active',
       render: (active) => {
-        const onchangeHandle = (e) => {
+        const onchangeHandle = (e: React.ChangeEvent<HTMLSelectElement>) => {
           const { name, value } = e.target;
           setAccountDetail([
             {
@@ -110,7 +110,7 @@ export default function AccountId() {
     },
   ];
 
-  const userNameMatch = (userId: number) => {
+  const userNameMatch = (userId: number): string => {
     const userData = users.filter((user) => user.id === userId)[0];
     return userData?.name;
   };
@@ -122,11 +122,11 @@ export default function AccountId() {
     getAccountList({ number_like: id }).then((res) => setAccountDetail(res?.data));
   }, [id]);
 
-  const editBtnHandle = () => {
+  const editBtnHandle = (): void => {
     setIsEdit(true);
   };
 
-  const submitBtnHandle = (e) => {
+  const submitBtnHandle = (e: MouseEvent<HTMLInputElement>): void => {
     e.preventDefault();
     const id = accountDetail[0]?.id;
     editAccountData(id, accountDetail[0]).then((res) => setIsEdit(false));

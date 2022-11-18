@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app';
 import { RecoilRoot } from 'recoil';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 
 import { getSessionStorage } from '@/utils/token';
 

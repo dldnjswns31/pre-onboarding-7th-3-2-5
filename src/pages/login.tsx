@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { getSessionStorage } from '@/utils/token';
@@ -11,7 +11,7 @@ import styles from '../styles/Login.module.css';
 import Image from 'next/image';
 import logo from '../../public/logo.png';
 
-export default function Login({ setToken }: any) {
+export default function Login({ setToken }: { setToken: Dispatch<SetStateAction<string | null>> }) {
   const router = useRouter();
   const { Footer } = Layout;
 
