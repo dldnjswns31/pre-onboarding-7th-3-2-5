@@ -29,7 +29,13 @@ export default function Filter() {
 
   return (
     <div className="filter">
-      <select name="broker_id" className={styles.select} id="broker" onChange={onChangeHandle}>
+      <select
+        name="broker_id"
+        className={styles.select}
+        id="broker"
+        onChange={onChangeHandle}
+        value={selected.broker_id}
+      >
         <option value="">브로커 선택</option>
         {Object.keys(brokers).map((broker, idx) => (
           <option key={idx} value={broker}>
@@ -37,7 +43,7 @@ export default function Filter() {
           </option>
         ))}
       </select>
-      <select name="status" className={styles.select} id="status" onChange={onChangeHandle}>
+      <select name="status" className={styles.select} id="status" onChange={onChangeHandle} value={selected.status}>
         <option value="">계좌 상태 선택</option>
         {Object.keys(statusList).map((status, idx) => (
           <option key={idx} value={statusList[status]}>
@@ -45,7 +51,13 @@ export default function Filter() {
           </option>
         ))}
       </select>
-      <select name="is_active" className={styles.select} id="active" onChange={onChangeHandle}>
+      <select
+        name="is_active"
+        className={styles.select}
+        id="active"
+        onChange={onChangeHandle}
+        value={selected.is_active}
+      >
         <option value="">계좌 활성화 선택</option>
         <option value="true">활성화</option>
         <option value="false">비활성화</option>
