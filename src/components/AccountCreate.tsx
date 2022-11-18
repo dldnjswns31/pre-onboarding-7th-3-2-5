@@ -6,8 +6,10 @@ import { createAccount } from '@/apis/account';
 
 const AccountCreate: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form] = Form.useForm();
   const { Option } = Select;
   const showModal = () => {
+    form.resetFields();
     setIsModalOpen(true);
   };
 
@@ -26,7 +28,7 @@ const AccountCreate: React.FC = () => {
         계좌 생성
       </Button>
       <Modal title="계좌 생성하기" open={isModalOpen} onCancel={handleCancel} footer={null}>
-        <Form onFinish={onFinish}>
+        <Form onFinish={onFinish} form={form}>
           <Form.Item name="broker_id" label="브로커명">
             <Select id="status_selector" placeholder="브로커를 선택해주세요">
               {Object.keys(brokers).map((item, idx) => {
@@ -40,7 +42,7 @@ const AccountCreate: React.FC = () => {
           </Form.Item>
 
           <Form.Item name="number" label="계좌번호">
-            <Input placeholder="(-) 빼고 입력해 주세요" style={{ width: 300 }} required />
+            <Input placeholder="(-) 빼고 입력해 주세요(최대12자리)" style={{ width: 300 }} maxLength={12} required />
           </Form.Item>
 
           <Form.Item name="status" label="계좌상태">
