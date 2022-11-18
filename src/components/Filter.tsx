@@ -4,11 +4,12 @@ import { selectedFilter } from '@/recoil/accountState';
 import { brokers, statusList } from '@/utils/valueConversion';
 
 import styles from '../styles/Filter.module.css';
+import { ChangeEvent } from 'react';
 
 export default function Filter() {
   const [selected, setSelected] = useRecoilState(selectedFilter);
 
-  const onChangeHandle = (e) => {
+  const onChangeHandle = (e: ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
 
     if (value) {

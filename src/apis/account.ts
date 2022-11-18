@@ -1,6 +1,15 @@
 import instance from './core/instance';
 import fakers from '@/utils/fakers';
 
+export interface Create {
+  broker_id: string;
+  number: string;
+  status: number;
+  payment: string;
+  assets: string;
+  is_active: boolean;
+}
+
 export const getAccountList = async (params?: object) => {
   try {
     const res = await instance.get('/accounts', {
@@ -29,7 +38,7 @@ export const deleteAccount = async (id: number) => {
   }
 };
 
-export const createAccount = async (...values: any[]) => {
+export const createAccount = async (...values: Create[]) => {
   const faker = fakers();
   const accountData = {
     ...values[0],

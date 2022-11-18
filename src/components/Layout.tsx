@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import router from 'next/router';
@@ -33,7 +33,13 @@ enum menuName {
   Logout = '로그아웃',
 }
 
-export default function Style({ children, setToken }) {
+export default function Style({
+  children,
+  setToken,
+}: {
+  children: ReactNode;
+  setToken: Dispatch<SetStateAction<string | null>>;
+}) {
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
 
   const setUserList = useSetRecoilState(userState);
@@ -45,6 +51,8 @@ export default function Style({ children, setToken }) {
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [currentMenu, setCurrentMenu] = useState<string>(menuName.Account);
+
+  getAccountList().then((res) => console.log(res));
 
   // 첫 페이지네이션 크기 설정 및 mapping용 사용자명 fetching
   useEffect(() => {

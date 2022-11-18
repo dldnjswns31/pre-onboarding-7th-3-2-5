@@ -2,24 +2,26 @@ import React, { useState } from 'react';
 import 'antd/dist/antd.css';
 import { Button, Input, Modal, Form, Select, InputNumber } from 'antd';
 import { brokers } from '@/utils/valueConversion';
-import { createAccount } from '@/apis/account';
+import { Create, createAccount } from '@/apis/account';
 
 const AccountCreate: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const { Option } = Select;
-  const showModal = () => {
+
+  const showModal = (): void => {
     form.resetFields();
     setIsModalOpen(true);
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     setIsModalOpen(false);
   };
 
-  const onFinish = (...values: any) => {
+  const onFinish = (...values: Create[]): void => {
     createAccount(...values);
     setIsModalOpen(false);
+    alert('계좌가 생성되었습니다.');
   };
 
   return (
