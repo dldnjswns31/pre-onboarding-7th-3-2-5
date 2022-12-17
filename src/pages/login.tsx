@@ -10,8 +10,12 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import styles from '../styles/Login.module.css';
 import Image from 'next/image';
 import logo from '../../public/logo.png';
+import { useSetRecoilState } from 'recoil';
+import { userToken } from '@/recoil/loginState';
 
-export default function Login({ setToken }: { setToken: Dispatch<SetStateAction<string | null>> }) {
+export default function Login() {
+  const setToken = useSetRecoilState(userToken);
+
   const router = useRouter();
   const { Footer } = Layout;
 
@@ -20,14 +24,14 @@ export default function Login({ setToken }: { setToken: Dispatch<SetStateAction<
     login(email, password).then((res) => {
       const token = getSessionStorage('token');
       setToken(token);
-      router.push('/');
+      router.push('/dashboard');
     });
   };
 
   useEffect(() => {
     const token = getSessionStorage('token');
     if (token) {
-      router.push('/');
+      router.push('/dashboard');
     }
   }, []);
 

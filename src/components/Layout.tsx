@@ -25,6 +25,7 @@ import {
 } from '@ant-design/icons';
 import { Layout, Menu, Avatar, Badge } from 'antd';
 import logo from '../../public/logo.png';
+import { userToken } from '@/recoil/loginState';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -33,16 +34,19 @@ enum menuName {
   Logout = '로그아웃',
 }
 
-export default function Style({
-  children,
-  setToken,
-  hasToken,
-}: {
-  children: ReactNode;
-  setToken: Dispatch<SetStateAction<string | null>>;
-  hasToken: string | null;
-}) {
+// {
+//   children,
+//   setToken,
+//   hasToken,
+// }: {
+//   children: ReactNode;
+//   setToken: Dispatch<SetStateAction<string | null>>;
+//   hasToken: string | null;
+// }
+
+export default function Style({ children }: { children: ReactNode }) {
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
+  const [token, setToken] = useRecoilState(userToken);
 
   const setUserList = useSetRecoilState(userState);
   const setTotalAccountItem = useSetRecoilState<number>(totalAccountState);
@@ -80,10 +84,10 @@ export default function Style({
   }, [filterParams, currentPage, searchKeyword]);
 
   useEffect(() => {
-    if (hasToken === null) {
+    if (token === null) {
       router.push('/login');
     }
-  }, [hasToken]);
+  }, [token]);
 
   const userId = getSessionStorage('userEmail');
   const menuItems: ItemType[] = [

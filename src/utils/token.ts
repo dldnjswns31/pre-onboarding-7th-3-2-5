@@ -1,5 +1,5 @@
 export const getSessionStorage = (key: string): string | null => {
-  return sessionStorage.getItem(key);
+  return typeof window !== 'undefined' ? sessionStorage.getItem(key) : null;
 };
 
 export const setSessionStorage = (key: string, value: string): void => {
