@@ -30,6 +30,7 @@ export default function Login() {
   useEffect(() => {
     const token = getSessionStorage('token');
     if (token) {
+      console.log(token);
       router.push('/dashboard');
     }
   }, []);

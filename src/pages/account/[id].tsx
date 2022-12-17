@@ -10,6 +10,7 @@ import { dateFormat, comma, accountMasking } from '@/utils/formatting';
 import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { editAccountData, getAccountList } from '@/apis/account';
+import Style from '@/components/Layout';
 
 interface DataType {
   id: number;
@@ -134,19 +135,21 @@ export default function AccountId() {
 
   return (
     <>
-      {isEdit ? (
-        <>
-          <h2>계좌 정보</h2>
-          <Table columns={columns} dataSource={accountDetail} pagination={false} />
-          <input type="button" value="제출하기" onClick={submitBtnHandle} />
-        </>
-      ) : (
-        <>
-          <h2>계좌 정보</h2>
-          <Table columns={columns} dataSource={accountDetail} pagination={false} />
-          <input type="button" value="수정하기" onClick={editBtnHandle} />
-        </>
-      )}
+      <Style>
+        {isEdit ? (
+          <>
+            <h2>계좌 정보</h2>
+            <Table columns={columns} dataSource={accountDetail} pagination={false} />
+            <input type="button" value="제출하기" onClick={submitBtnHandle} />
+          </>
+        ) : (
+          <>
+            <h2>계좌 정보</h2>
+            <Table columns={columns} dataSource={accountDetail} pagination={false} />
+            <input type="button" value="수정하기" onClick={editBtnHandle} />
+          </>
+        )}
+      </Style>
     </>
   );
 }

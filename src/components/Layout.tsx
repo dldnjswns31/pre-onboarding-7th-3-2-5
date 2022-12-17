@@ -26,6 +26,7 @@ import {
 import { Layout, Menu, Avatar, Badge } from 'antd';
 import logo from '../../public/logo.png';
 import { userToken } from '@/recoil/loginState';
+import useResponseInterceptor from '@/hooks/useResponseInterceptor';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -50,6 +51,8 @@ export default function Style({ children }: { children: ReactNode }) {
   const [userId, setUserId] = useState<string | null>(null);
 
   const router = useRouter();
+
+  useResponseInterceptor(setToken);
 
   // 첫 페이지네이션 크기 설정 및 mapping용 사용자명 fetching
   useEffect(() => {
