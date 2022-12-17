@@ -6,7 +6,7 @@ export const login = async (email: string, password: string) => {
     const { data } = await instance.post('/login', { email, password });
     setSessionStorage('token', data.accessToken);
     setSessionStorage('userEmail', data.user.email);
-    return data.user;
+    return data;
   } catch (err) {
     console.log('error : ', err);
   }

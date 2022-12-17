@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { getSessionStorage } from '@/utils/token';
@@ -21,9 +21,8 @@ export default function Login() {
 
   const onFinish = (values: { email: string; password: string }) => {
     const { email, password } = values;
-    login(email, password).then((res) => {
-      const token = getSessionStorage('token');
-      setToken(token);
+    login(email, password).then((user) => {
+      setToken(user.accessToken);
       router.push('/dashboard');
     });
   };

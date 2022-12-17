@@ -1,4 +1,4 @@
-import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { useRouter } from 'next/router';
@@ -34,16 +34,6 @@ enum menuName {
   Logout = '로그아웃',
 }
 
-// {
-//   children,
-//   setToken,
-//   hasToken,
-// }: {
-//   children: ReactNode;
-//   setToken: Dispatch<SetStateAction<string | null>>;
-//   hasToken: string | null;
-// }
-
 export default function Style({ children }: { children: ReactNode }) {
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
   const [token, setToken] = useRecoilState(userToken);
@@ -57,6 +47,7 @@ export default function Style({ children }: { children: ReactNode }) {
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [currentMenu, setCurrentMenu] = useState<string>(menuName.Account);
+  const [userId, setUserId] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -66,6 +57,7 @@ export default function Style({ children }: { children: ReactNode }) {
       setTotalAccountItem(res?.data.length);
     });
     getUserList().then((res) => setUserList(res));
+    setUserId(getSessionStorage('userEmail'));
   }, []);
 
   // filter나 search가 바뀔때마다 pagination 크기 다시 계산
@@ -89,7 +81,6 @@ export default function Style({ children }: { children: ReactNode }) {
     }
   }, [token]);
 
-  const userId = getSessionStorage('userEmail');
   const menuItems: ItemType[] = [
     {
       key: menuName.Account,
